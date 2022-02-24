@@ -4,25 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="css/style.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-    #logo span {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 10vh;
-    }
+    #welcome {
+  text-align: center;
+  font-size: 5vw;
+  font-weight: bold;
+  color: #000;
+  padding-top: 20vh;
+  padding-bottom: 2.5vh;
+}
+#welcome2 {
+  text-align: center;
+  font-size: 2.5vw;
+  color: rgba(80,80,80,20);
+}
+#login {
+  padding-top: 15vh;
+}
+#login div {
+  text-align: center;
+}
+#login div .type {
+  width: 75%;
+  margin-bottom: 2vh;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 2vw;
+  font-size: 3vw;
+}
+#login div .btn {
+  width: 75%;
+  margin-bottom: 0.8vh;
+  border: none;
+  padding: 2vw;
+  font-size: 3vw;
+}
+#login div a {
+  color: #000;
+  font-size: 2vw;
+  text-decoration: none;
+}
   </style>
 </head>
 <body>
 
-  <div id="logo">
-    <span id="">&lt;</span><span id="">&#47;</span><span id="">W</span><span id="">e</span><span id="">b</span><span id="">&nbsp</span><span id="">T</span><span id="">a</span><span id="">l</span><span id="">k</span><span id="">&gt;</span>
-  </div>
+  <div>
+    <div id="welcome">Welcome to WebTalk</div>
+    <div id="welcome2">If you have a WebTalk Account,</div>
+    <div id="welcome2">log in with your id.</div>
 
+    <form id="login">
+      <div><input class="type" type="text" placeholder="ID"></div>
+      <div><input class="type" type="password" placeholder="Password"></div>
+      <div><input class="btn" type="submit" value="Log In"></div>
+      <div><input class="btn" type="submit" value="Sign Up"></div>
+      <div><a href="#">Forgot your password?</a></div>
+    </form>
+  </div>
+  
+  <!--firebase-->
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
-  
+
   <script>
     var firebaseConfig = {
       // private
@@ -37,19 +83,10 @@
       // private
     };
     firebase.initializeApp(firebaseConfig);
-
   </script>
   
-  <script>
-
-    const db = firebase.firestore();
-    db.collection("test").get().then((snapshot)=>{
-      snapshot.forEach((doc) => {
-        console.log(doc.data());
-      });
-    })
-
-  </script>
+  <!--icon-->
+  <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
 
 </body>
 </html>
