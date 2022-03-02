@@ -8,8 +8,16 @@
 </head>
 <body>
 
-  <p id="mycount"></p>
   <button type="button" onclick="writeRTDB('test_sender','test_receiver')">writeRTDB</button>
+  <p id="mycount"></p>
+  <button type="button" onclick="writeDB_id('doogle','doodle123','dodle','01012345678','doodle@dmail.com','doodlelogo')">writeDB_id</button>
+  <p id="id0"></p>
+  <p id="id1"></p>
+  <p id="id2"></p>
+  <p id="id3"></p>
+  <p id="id4"></p>
+  <p id="id5"></p>
+  <button type="button" onclick="readDB_id('google')">readDB_id</button>
 
   <!--firebase7/8/9 CDN (now 8)-->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -20,13 +28,12 @@
   <script src="js/firebase_config.js"></script>
 
   <script>
-    // Get a reference to the database service
-    //var database = firebase.database();
+
+    // realtime db test
 
     function writeRTDB(sender, receiver) {
 
       var dbRef = firebase.database().ref("mailbox/" + receiver + "/" + sender);
-
       dbRef.get().then((snapshot) => {
         if (snapshot.exists()) {
           dbRef.set({
@@ -46,8 +53,52 @@
     var mycount = document.getElementById("mycount");
     var countRef = firebase.database().ref("mailbox/test_receiver/test_sender");
     countRef.on("value", (snapshot) => {
-      mycount.innerHTML = snapshot.val().unread;
+      mycount.innerHTML = "unread messages: " + snapshot.val().unread;
     });
+
+
+    // firestore db test
+    // https://webdoli.tistory.com/187
+    
+    var db = firebase.firestore();
+    function writeDB_id(id, pw, nickname, tel, email, img) {
+      db.collection("users").doc(id).set({
+        id: id,
+        pw: pw,
+        nickname: nickname,
+        tel: tel,
+        email: email,
+        img: img
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
+    }
+
+    function readDB_id(id) {
+      db.collection("users").doc(id).get().then((doc) => {
+        if (doc.exists) {
+          console.log("Document data: ", doc.data());
+
+          // just for check
+          var key = ["id","pw","nickname","tel","email","img"];
+          var arr = doc.data()
+          for (var i = 0; i < 6; i++) {
+            var tmp = document.getElementById("id" + String(i));
+            tmp.innerHTML = key[i] + ": " + arr[key[i]];
+          }
+
+        }
+        else {
+          console.log("No such document!");
+        }
+      }).catch((error) => {
+        console.log("Error getting document: ", error);
+      });
+    }
 
   </script>
 
