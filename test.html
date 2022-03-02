@@ -8,7 +8,8 @@
 </head>
 <body>
 
-  <button type="button" onclick="writeRTDB()">writeRTDB</button>
+  <p id="mycount"></p>
+  <button type="button" onclick="writeRTDB('test_sender','test_receiver')">writeRTDB</button>
 
   <!--firebase7/8/9 CDN (now 8)-->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -21,12 +22,32 @@
   <script>
     // Get a reference to the database service
     //var database = firebase.database();
-    function writeRTDB() {
-      firebase.database().ref("tester1/"+"test").set({
-        test: 123,
-        test1: 1234
+
+    function writeRTDB(sender, receiver) {
+
+      var dbRef = firebase.database().ref("mailbox/" + receiver + "/" + sender);
+
+      dbRef.get().then((snapshot) => {
+        if (snapshot.exists()) {
+          dbRef.set({
+            unread: snapshot.val().unread + 1
+          });
+        }
+        else {
+          dbRef.set({
+            unread: 1
+          });
+        }
+      }).catch((error) => {
+        console.error(error);
       });
     }
+
+    var mycount = document.getElementById("mycount");
+    var countRef = firebase.database().ref("mailbox/test_receiver/test_sender");
+    countRef.on("value", (snapshot) => {
+      mycount.innerHTML = snapshot.val().unread;
+    });
 
   </script>
 
