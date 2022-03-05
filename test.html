@@ -10,7 +10,7 @@
 
   <button type="button" onclick="writeRTDB('test_sender','test_receiver')">writeRTDB</button>
   <p id="mycount"></p>
-  <button type="button" onclick="writeDB_id('doogle','doodle123','dodle','01012345678','doodle@dmail.com','doodlelogo')">writeDB_id</button>
+  <button type="button" onclick="writeDB_id('google','google123','google','01012345678','google@dmail.com','googlelogo')">writeDB_id</button>
   <p id="id0"></p>
   <p id="id1"></p>
   <p id="id2"></p>
@@ -24,6 +24,7 @@
   <p id="state3"></p>
   <p id="state4"></p>
   <p id="state5"></p>
+  <button type="button" onclick="deleteDB_id('google')">deleteDB_id</button>
 
   <!--firebase7/8/9 CDN (now 8)-->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -107,7 +108,7 @@
     }
  
     // 특정 문서 실시간 업데이트
-    db.collection("users").doc("google").onSnapshot((doc) => {
+    db.collection("users").doc("doogle").onSnapshot((doc) => {
       var key = ["id","pw","nickname","tel","email","img"];
       var arr = doc.data();
       for (var i = 0; i < 6; i++) {
@@ -124,6 +125,14 @@
         console.log(doc.data());
       });
     });
+
+    function deleteDB_id(id) {
+      db.collection("users").doc(id).delete().then(function() {
+        console.log("Document successfully deleted!");
+      }).catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+    }
 
   </script>
 
