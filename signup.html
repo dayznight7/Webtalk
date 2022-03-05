@@ -4,8 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebTalk</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+#welcome {
+  text-align: center;
+  font-size: 5vw;
+  font-weight: bold;
+  color: #000;
+  padding-top: 12vh;
+  padding-bottom: 2.5vh;
+}
+#welcome2 {
+  text-align: center;
+  font-size: 2.5vw;
+  color: rgba(80,80,80,20);
+}
+#login {
+  padding-top: 5vh;
+}
+#login div {
+  text-align: center;
+}
+#login div .notice {
+  width: 75%;
+  margin: auto;
+  text-align: left;
+  font-size: 2.5vw;
+  margin-bottom: 1vh;
+}
+#login div .type {
+  width: 75%;
+  margin-bottom: 2vh;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 2vw;
+  font-size: 3vw;
+}
+#login div .btn {
+  width: 75%;
+  margin-bottom: 0.8vh;
+  border: none;
+  padding: 2vw;
+  font-size: 3vw;
+}
+#login div a {
+  color: #000;
+  font-size: 2vw;
+  text-decoration: none;
+}
+  </style>
 </head>
 <body>
+  <div>
+    <div id="welcome">Sign up for WebTalk</div>
+    <div id="welcome2">Please enter your information.</div>
+
+    <form id="login">
+      <div>
+        <p class="notice">ID</p>
+        <input class="type" type="text" placeholder=""></div>
+      <div>
+        <p class="notice">Password</p>
+        <input class="type" type="password" placeholder=""></div>
+      <div>
+        <p class="notice">Nickname</p>
+        <input class="type" type="text" placeholder=""></div>
+      <div>
+        <p class="notice">Phone number</p>
+        <input class="type" type="tel" maxlength="11" placeholder="ex) 01012345678"></div>
+      <div>
+        <p class="notice">Email</p>
+        <input class="type" type="email" placeholder=""></div>
+      <div>
+        <input class="btn" type="submit" value="Sign Up"></div>
+      <div><p id="redmessage"></p></div>
+      <div><a href="index.html">Return to login page</a></div>
+    </form>
+  </div>
   
+  <!--firebase7/8/9 CDN (now 8)-->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <script src="js/firebase_config.js"></script>
+  
+  <!--icon-->
+  <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
+
 </body>
 </html>
