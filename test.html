@@ -18,6 +18,12 @@
   <p id="id4"></p>
   <p id="id5"></p>
   <button type="button" onclick="readDB_id('google')">readDB_id</button>
+  <p id="state0"></p>
+  <p id="state1"></p>
+  <p id="state2"></p>
+  <p id="state3"></p>
+  <p id="state4"></p>
+  <p id="state5"></p>
 
   <!--firebase7/8/9 CDN (now 8)-->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -85,7 +91,7 @@
 
           // just for check
           var key = ["id","pw","nickname","tel","email","img"];
-          var arr = doc.data()
+          var arr = doc.data();
           for (var i = 0; i < 6; i++) {
             var tmp = document.getElementById("id" + String(i));
             tmp.innerHTML = key[i] + ": " + arr[key[i]];
@@ -99,6 +105,25 @@
         console.log("Error getting document: ", error);
       });
     }
+ 
+    // 특정 문서 실시간 업데이트
+    db.collection("users").doc("google").onSnapshot((doc) => {
+      var key = ["id","pw","nickname","tel","email","img"];
+      var arr = doc.data();
+      for (var i = 0; i < 6; i++) {
+        var tmp = document.getElementById("state" + String(i));
+        tmp.innerHTML = key[i] + ": " + arr[key[i]];
+      }  
+    });
+
+    // 특정 키값 가진 여러문서 수신 대기
+    db.collection("users").where("tel", "==", "01012345678").onSnapshot((querySnapshot) => {
+      console.log(querySnapshot);
+      console.log(typeof(querySnapshot));
+      querySnapshot.forEach(doc => {
+        console.log(doc.data());
+      });
+    });
 
   </script>
 
