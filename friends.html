@@ -7,28 +7,37 @@
   <title>WebTalk</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
+* {
+  margin: 0;
+  padding: 0;
+}
 #list {
   position: fixed;
   top: 0;
+  bottom: 50px;
   left: 0;
   right: 0;
-  bottom: 0;
   overflow: auto;
 }
 #nav {
+  box-sizing: border-box;
   position: fixed;
-  top: 1;
+  height: 50px;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  text-align: center;
   background-color: #f9f9fa;
-  padding: 20px 50px;
   border-top: 1px solid rgba(121, 121, 121, 0.3);
 }
-#nav ul {
-  display: flex;
-  justify-content: space-between;
+#nav div {
   list-style: none;
+  width: 25%;
+  height: 100%;
+  padding-top: 12px;
+  text-align: center;
+  text-decoration: none;
+  float: left;
 }
 #nav ul li a {
   color: #2e363e;
@@ -38,52 +47,12 @@
 </head>
 <body>
   <div id="list">
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
-    <h1>list</h1>
   </div>
   <nav id="nav">
-    <ul>
-      <li>
-        <a href="friends.html">
-          <i class="fas fa-user fa-lg"></i>
-        </a>
-      </li>
-      <li>
-        <a href="chats.html">
-          <i class="far fa-comment fa-lg"></i>
-        </a>
-      </li>
-      <li>
-        <a href="search.html">
-          <i class="fas fa-search fa-lg"></i>
-        </a>
-      </li>
-      <li>
-        <a href="setting.html">
-          <i class="fas fa-ellipsis-h fa-lg"></i>
-        </a>
-      </li>
-    </ul>
+    <div><i class="fas fa-user fa-lg"></i></div>
+    <div><i class="far fa-comment fa-lg"></i></div>
+    <div><i class="fas fa-search fa-lg"></i></div>
+    <div><i class="fas fa-ellipsis-h fa-lg"></i></div>
   </nav>
 
   <!--icon-->
