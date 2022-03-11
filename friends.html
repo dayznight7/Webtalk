@@ -7,22 +7,75 @@
   <title>WebTalk</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-* {
-  margin: 0;
-  padding: 0;
+#top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 40px;
+}
+#top h1 {
+  font-size: 32px;
+  font-weight: 600;
+}
+#icon span {
+  margin-left: 25px;
 }
 #list {
   position: fixed;
-  top: 0;
-  bottom: 50px;
+  bottom: 60px;
+  top: 80px;
   left: 0;
   right: 0;
   overflow: auto;
 }
+#myprofile {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+#myprofile img {
+  width: 80px;
+  height: 80px;
+  border-radius: 40%;
+  margin-right: 20px;
+}
+#myprofile div h4 {
+  font-weight: 600;
+  font-size: 22px;
+}
+#myprofile div h6 {
+  margin-top: 5px;
+  font-size: 17px;
+  color: rgba(0,0,0,0.5);
+}
+#line {
+  border-top: 1px solid rgba(0,0,0,0.2);
+  margin-top: 25px;
+  margin-bottom: 25px;
+  margin-left: 20px;
+  margin-right: 40px;
+}
+#profile {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+#profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 40%;
+  margin-right: 20px;
+}
+#profile h6 {
+  color: rgba(0,0,0,0.5);
+}
 #nav {
   box-sizing: border-box;
   position: fixed;
-  height: 50px;
+  height: 60px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -34,7 +87,7 @@
   list-style: none;
   width: 25%;
   height: 100%;
-  padding-top: 12px;
+  padding-top: 20px;
   text-align: center;
   text-decoration: none;
   float: left;
@@ -46,8 +99,53 @@
   </style>
 </head>
 <body>
-  <div id="list">
+
+  <div id="top">
+    <h1>Friends</h1>
+    <div id="icon">
+      <span><i class="fas fa-search fa-lg"></i></span>
+      <span><i class="fas fa-music fa-lg"></i></span>
+      <span><i class="fas fa-cog fa-lg"></i></span>
+    </div>
   </div>
+
+  <div id="list">
+    <div id="myprofile">
+      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+      <div>
+        <h4>Dayznight7</h4>
+        <h6>thinking</h6>
+      </div>
+    </div>
+
+    <div id="line"></div>
+
+    <div id="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+      <div>
+        <h4>Github</h>
+        <h6>Github.com</h>
+      </div>
+    </div>
+
+    <div id="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+      <div>
+        <h4>Github</h>
+        <h6>Github.com</h>
+      </div>
+    </div>
+
+    <div id="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+      <div>
+        <h4>Github</h>
+        <h6>Github.com</h>
+      </div>
+    </div>
+
+  </div>
+
   <nav id="nav">
     <div><i class="fas fa-user fa-lg"></i></div>
     <div><i class="far fa-comment fa-lg"></i></div>
