@@ -35,10 +35,12 @@
 }
 #profile {
   margin-left: 20px;
+  margin-right: 40px;
   padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 #profile img {
   width: 60px;
@@ -46,10 +48,17 @@
   border-radius: 40%;
   margin-right: 20px;
 }
-#prechatting h4 {
+#prechatting {
+  display: flex;
+}
+#prechatting div h3 {
+  padding-top: 8px;
+}
+#prechatting div h4 {
   color: rgba(0,0,0,0.7);
 }
 #timebadge {
+  color: rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -107,15 +116,49 @@
   <div id="list">
 
     <div id="profile">
-      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
       <div id="prechatting">
-        <h3>Github</h3>
-        <h4>Github.com</h4>
+        <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+        <div>
+          <h3>Github</h3>
+          <h4>Github.com</h4>
+        </div>
       </div>
       <div id="timebadge">
         <span>12:00</span>
         <div class="badge">
-          1
+          2
+        </div>
+      </div>
+    </div>
+
+    <div id="profile">
+      <div id="prechatting">
+        <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+        <div>
+          <h3>Github</h3>
+          <h4>Github.com</h4>
+        </div>
+      </div>
+      <div id="timebadge">
+        <span>12:00</span>
+        <div class="badge">
+          2
+        </div>
+      </div>
+    </div>
+
+    <div id="profile">
+      <div id="prechatting">
+        <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+        <div>
+          <h3>Github</h3>
+          <h4>Github.com</h4>
+        </div>
+      </div>
+      <div id="timebadge">
+        <span>12:00</span>
+        <div class="badge">
+          2
         </div>
       </div>
     </div>
