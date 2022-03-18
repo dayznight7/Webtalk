@@ -41,7 +41,9 @@
   font-size: 3vw;
 }
 #login div .btn {
+  background-color: rgb(239,239,239);
   width: 75%;
+  margin: auto;
   margin-bottom: 0.8vh;
   border: none;
   padding: 2vw;
@@ -52,34 +54,59 @@
   font-size: 2vw;
   text-decoration: none;
 }
+#reveal {
+  font-size: 3vw;
+  padding-bottom: 0.5vh;
+}
+#redmessage {
+  color: tomato;
+}
+#greenmessage {
+  color: rgb(129,193,71);
+}
   </style>
 </head>
 <body>
   <div>
+
     <div id="welcome">Sign up for WebTalk</div>
     <div id="welcome2">Please enter your information.</div>
 
-    <form id="login">
+    <div id="login">
+
       <div>
         <p class="notice">ID</p>
-        <input class="type" type="text" placeholder=""></div>
+        <input class="type" type="text" placeholder="">
+      </div>
       <div>
         <p class="notice">Password</p>
-        <input class="type" type="password" placeholder=""></div>
+        <input class="type" type="password" placeholder="">
+      </div>
       <div>
         <p class="notice">Nickname</p>
-        <input class="type" type="text" placeholder=""></div>
+        <input class="type" type="text" placeholder="">
+      </div>
       <div>
         <p class="notice">Phone number</p>
-        <input class="type" type="tel" maxlength="11" placeholder="ex) 01012345678"></div>
+        <input class="type" type="tel" maxlength="11" placeholder="ex) 01012345678">
+      </div>
       <div>
         <p class="notice">Email</p>
-        <input class="type" type="email" placeholder=""></div>
+        <input class="type" type="email" placeholder="">
+      </div>
+      <div id="reveal">
+        <p id="redmessage"></p>
+        <p id="greenmessage"></p>
+      </div>
       <div>
-        <input class="btn" type="submit" value="Sign Up"></div>
-      <div><p id="redmessage"></p></div>
-      <div><a href="index.html">Return to login page</a></div>
-    </form>
+        <div class="btn" onclick="trySignUp()">Sign Up</div>
+      </div>
+      <div>
+        <a href="index.html">Return to login page</a>
+      </div>
+
+    </div>
+
   </div>
   
   <!--firebase7/8/9 CDN (now 8)-->
@@ -109,6 +136,15 @@
       });
     }
 
+
+    // testing
+    function trySignUp() {
+      var tmp_id = document.getElementsByClassName("type")[0].value;
+      var tmp_tel = document.getElementsByClassName("type")[3].value;
+      var tmp_email = document.getElementsByClassName("type")[4].value;
+    }
+
+    
   </script>
 
 </body>
