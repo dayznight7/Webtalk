@@ -77,6 +77,12 @@
   color: #2e363e;
   text-decoration: none;
 }
+#nav_search {
+  font-size: 20px;
+}
+#nav_setting {
+  font-size: 20px;
+}
   </style>
 </head>
 <body>
@@ -114,14 +120,29 @@
   </div>
 
   <nav id="nav">
-    <div><i class="far fa-user fa-lg"></i></div>
-    <div><i class="far fa-comment fa-lg"></i></div>
-    <div><i id="search" class="fa-solid fa-magnifying-glass-plus"></i></i></div>
-    <div><i class="fas fa-ellipsis-h fa-lg"></i></div>
+    <div id="nav_friends" onclick="nav_friends()"><i class="far fa-user fa-lg"></i></div>
+    <div id="nav_chats" onclick="nav_chats()"><i class="far fa-comment fa-lg"></i></div>
+    <div id="nav_search" onclick="nav_search()"><i class="fa-solid fa-square-plus"></i></div>
+    <div id="nav_setting" onclick="nav_setting()"><i class="fa-regular fa-circle-user"></i></div>
   </nav>
 
   <!--icon-->
   <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
+
+  <script>
+
+
+    // using firestore db
+    const db = firebase.firestore();
+
+
+    function nav_friends() { location.replace("friends.html"); }
+    function nav_chats() { location.replace("chats.html"); }
+    function nav_search() { location.replace("search.html"); }
+    function nav_setting() { location.replace("setting.html"); }
+
+    
+  </script>
 
 </body>
 </html>

@@ -108,6 +108,10 @@
           .get()
           .then((doc) => {
             if (document.getElementsByClassName("type")[1].value == doc.data().pw) {
+              // localStorage.setItem('키','값'); https://kgu0724.tistory.com/229
+              // if(localStorage.getItem('키'))
+              // { var lastData = localStorage.getItem('키') }
+
               localStorage.setItem("webtalk_id",tmp_id);
               location.replace("friends.html");
             }

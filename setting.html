@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebTalk</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+#top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 40px;
+}
+#top h1 {
+  font-size: 32px;
+  font-weight: 600;
+}
+#icon span {
+  margin-left: 25px;
+}
+#list {
+  position: fixed;
+  bottom: 60px;
+  top: 80px;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+#myprofile {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+#myprofile img {
+  width: 80px;
+  height: 80px;
+  border-radius: 40%;
+  margin-right: 20px;
+}
+#myprofile div h4 {
+  font-weight: 600;
+  font-size: 22px;
+}
+#myprofile div h6 {
+  margin-top: 5px;
+  font-size: 17px;
+  color: rgba(0,0,0,0.5);
+}
+#line {
+  border-top: 1px solid rgba(0,0,0,0.2);
+  margin-top: 25px;
+  margin-bottom: 15px;
+  margin-left: 20px;
+  margin-right: 40px;
+}
+#profile {
+  margin-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+#profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 40%;
+  margin-right: 20px;
+}
+#profile h6 {
+  color: rgba(0,0,0,0.5);
+}
+#nav {
+  box-sizing: border-box;
+  position: fixed;
+  height: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: #f9f9fa;
+  border-top: 1px solid rgba(121, 121, 121, 0.3);
+}
+#nav div {
+  list-style: none;
+  width: 25%;
+  height: 100%;
+  padding-top: 20px;
+  text-align: center;
+  text-decoration: none;
+  float: left;
+}
+#nav ul li a {
+  color: #2e363e;
+  text-decoration: none;
+}
+#nav_search {
+  font-size: 20px;
+}
+#nav_setting {
+  font-size: 20px;
+}
+  </style>
+</head>
+<body>
+
+  <div id="top">
+    <h1>Setting</h1>
+    <div id="icon">
+      <span><i class="fas fa-search fa-lg"></i></span>
+      <span><i class="fas fa-music fa-lg"></i></span>
+      <span><i class="fas fa-cog fa-lg"></i></span>
+    </div>
+  </div>
+
+  <div id="list">
+    <div id="myprofile">
+      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+      <div>
+        <h4>Dayznight7</h4>
+        <h6>thinking</h6>
+      </div>
+    </div>
+
+    <div id="line"></div>
+
+    <div id="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+      <div>
+        <h4>Github</h>
+        <h6>Github.com</h>
+      </div>
+    </div>
+
+    <div id="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+      <div>
+        <h4>Github</h>
+        <h6>Github.com</h>
+      </div>
+    </div>
+
+    <div id="profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+      <div>
+        <h4>Github</h>
+        <h6>Github.com</h>
+      </div>
+    </div>
+
+  </div>
+
+  <nav id="nav">
+    <div id="nav_friends" onclick="nav_friends()"><i class="far fa-user fa-lg"></i></div>
+    <div id="nav_chats" onclick="nav_chats()"><i class="far fa-comment fa-lg"></i></div>
+    <div id="nav_search" onclick="nav_search()"><i class="fa-regular fa-square-plus"></i></div>
+    <div id="nav_setting" onclick="nav_setting()"><i class="fa-solid fa-circle-user"></i></div>
+  </nav>
+
+  <!--icon-->
+  <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
+
+  <script>
+
+
+    // using firestore db
+    const db = firebase.firestore();
+
+
+    function nav_friends() { location.replace("friends.html"); }
+    function nav_chats() { location.replace("chats.html"); }
+    function nav_search() { location.replace("search.html"); }
+    function nav_setting() { location.replace("setting.html"); }
+
+    
+  </script>
+
+</body>
+</html>
