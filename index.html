@@ -34,7 +34,9 @@
   font-size: 3vw;
 }
 #login div .btn {
+  background-color: rgb(239,239,239);
   width: 75%;
+  margin: auto;
   margin-bottom: 0.8vh;
   border: none;
   padding: 2vw;
@@ -45,37 +47,87 @@
   font-size: 2vw;
   text-decoration: none;
 }
+#reveal {
+  font-size: 3vw;
+  padding-bottom: 0.5vh;
+}
+#redmessage {
+  color: tomato;
+}
   </style>
 </head>
 <body>
 
   <div>
+
     <div id="welcome">Welcome to WebTalk</div>
     <div id="welcome2">If you have a WebTalk Account,</div>
     <div id="welcome2">log in with your id.</div>
 
-    <form id="login">
+    <div id="login">
       <div><input class="type" type="text" placeholder="ID"></div>
       <div><input class="type" type="password" placeholder="Password"></div>
-      <div><input class="btn" type="submit" value="Log In"></div>
-      <div><p id="redmessage"></p></div>
+      <div id="reveal"><p id="redmessage"></p></div>
+      <div>
+        <div class="btn" onclick="trySignIn()">Log In</div>
+      </div>
+      
       <div>
         <a href="signup.html">Sign up&nbsp;&nbsp;&nbsp;</a>
         <span style="font-size: 2vw;">/</span>
         <a href="#">&nbsp;&nbsp;&nbsp;Forgot your password?</a></div>
-    </form>
+      </div>
+
   </div>
   
   <!--firebase7/8/9 CDN (now 8)-->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <script src="js/firebase_config.js"></script>
   
   <!--icon-->
   <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
+
+  <script>
+  
+  
+    // using firestore db
+    const db = firebase.firestore();
+
+
+    // check id => signin
+    function trySignIn() {
+
+      var tmp_id = document.getElementsByClassName("type")[0].value;
+      db.collection("login").where("id", "==", tmp_id)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length == 1) {
+
+          db.collection("login").doc(tmp_id)
+          .get()
+          .then((doc) => {
+            if (document.getElementsByClassName("type")[1].value == doc.data().pw) {
+              localStorage.setItem("webtalk_id",tmp_id);
+              location.replace("friends.html");
+            }
+            else {
+              document.getElementById("redmessage").innerText = "login failed";
+              document.getElementById("redmessage").style.color = "tomato";
+            }
+            
+          });
+
+        }
+        else {
+          document.getElementById("redmessage").innerText = "account doen not exist";
+          document.getElementById("redmessage").style.color = "tomato";
+        }
+      });
+    }
+
+
+  </script>
 
 </body>
 </html>
