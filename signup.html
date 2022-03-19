@@ -96,7 +96,6 @@
       </div>
       <div id="reveal">
         <p id="redmessage"></p>
-        <p id="greenmessage"></p>
       </div>
       <div>
         <div class="btn" onclick="trySignUp()">Sign Up</div>
@@ -119,30 +118,69 @@
 
   <script>
 
+
     // using firestore db
-    var db = firebase.firestore();
+    const db = firebase.firestore();
 
 
-    isRegistered("a", "01012345679", "a@gmail.com");
-    // id tel email
-    function isRegistered(id, tel, email) {
-      db.collection("login").where("id", "==", id)
-      .get()
-      .then((querySnapshot) => {
-        console.log(querySnapshot.docs.length);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-    }
-
-
-    // testing
+    //check if already registered => signup
     function trySignUp() {
+
+      for (var i = 0; i < 5; i++) {
+        if (document.getElementsByClassName("type")[i].value.length == 0) {
+          document.getElementById("redmessage").innerText = "please enter all";
+          document.getElementById("redmessage").style.color = "tomato";
+          return;
+        }
+      }
       var tmp_id = document.getElementsByClassName("type")[0].value;
       var tmp_tel = document.getElementsByClassName("type")[3].value;
       var tmp_email = document.getElementsByClassName("type")[4].value;
+
+      db.collection("login").where("id", "==", tmp_id)
+      .get()
+      .then((querySnapshot1) => {
+        if (querySnapshot1.docs.length == 0) {
+
+          db.collection("login").where("tel","==", tmp_tel)
+          .get()
+          .then((querySnapshot2) => {
+            if (querySnapshot2.docs.length == 0) {
+
+              db.collection("login").where("email", "==", tmp_email)
+              .get()
+              .then((querySnapshot3) => {
+                if (querySnapshot3.docs.length == 0) {
+                  
+                  // id tel email all ok, now start signup
+                  db.collection("login").doc(tmp_id).set({
+                    id: document.getElementsByClassName("type")[0].value,
+                    pw: document.getElementsByClassName("type")[1].value,
+                    nickname: document.getElementsByClassName("type")[2].value,
+                    tel: document.getElementsByClassName("type")[3].value,
+                    email: document.getElementsByClassName("type")[4].value,
+                    img: "https://cdn-icons-png.flaticon.com/512/38/38401.png",
+                    room: [],
+                    unread: []
+                  });
+
+                  document.getElementById("redmessage").innerText = "signup succeed";
+                  document.getElementById("redmessage").style.color = "rgb(129,193,71)";
+                  return;
+                }
+              });
+
+            }
+          });
+
+        }
+      });
+
+      document.getElementById("redmessage").innerText = "already registered";
+      document.getElementById("redmessage").style.color = "tomato";
+
     }
+    //check if already registered => signup
 
     
   </script>
