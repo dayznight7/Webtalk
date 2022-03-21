@@ -134,11 +134,11 @@
 
   <div id="list">
     <div id="myprofile">
-      <!-- <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+      <img id="myprofile_img" src="https://i.stack.imgur.com/kOnzy.gif">
       <div>
-        <h4>Dayznight7</h4>
-        <h6>thinking</h6>
-      </div> -->
+        <h4 id="myprofile_id">Loading</h4>
+        <h6 id="myprofile_intro">wait for a second</h6>
+      </div>
     </div>
 
     <div id="line"></div>
@@ -196,57 +196,25 @@
     const db = firebase.firestore();
 
 
+    // get info from localStorage
     const webtalk_id = localStorage.getItem("webtalk_id");
-    get_myprofile();
-    get_profiles();
-    set_myprofile();
-    set_profiles();
+    
 
-    // my profile img/id/statemessage => json
-    // profiles img/id/statemessage => json array
-    // chat room list img/name/lastmessage => json array, realtime
-    // room html
-    // 
-
-
-    // db to localStorage
-    function get_myprofile() {
+    // load myprofile
+    load_myprofile();
+    function load_myprofile() {
       db.collection("login").doc(webtalk_id).get().then((doc) => {
-        var json_myprofile = {
-          "id" : webtalk_id,
-          "img" : doc.data().img,
-          "intro" : doc.data().intro
-        };
-
-        localStorage.setItem("webtalk_myprofile", JSON.stringify(json_myprofile));
+        document.getElementById("myprofile_id").innerHTML = doc.data().id;
+        document.getElementById("myprofile_intro").innerHTML = doc.data().intro;
+        $("#myprofile_img").attr("src", doc.data().img); 
       });
-
     }
 
-
-    function get_profiles() {
-
+    // load profiles, compare with localStorage friendlist
+    function load_profiles() {
+      db.collection("")
     }
 
-
-    // localStorage to webpage
-    function set_myprofile() {
-      var tmp1 = JSON.parse(localStorage.getItem("webtalk_myprofile"));
-      var tmp2 = `
-      <img src="${tmp1.img}">
-      <div>
-        <h4>${tmp1.id}</h4>
-        <h6>${tmp1.intro}</h6>
-      </div>
-      `;
-      $("#myprofile").append(tmp2);
-     
-    }
-
-
-    function set_profiles() {
-      
-    }
 
 
 
