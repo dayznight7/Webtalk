@@ -164,7 +164,7 @@
     <div id="nav_setting" onclick="nav_setting()"><i class="fa-regular fa-circle-user"></i></div>
   </nav>
 
-  <div id="tomatomessage">99</div>
+  <div id="tomatomessage"></div>
 
   <!--icon-->
   <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
@@ -222,6 +222,42 @@
     }
 
 
+    function sum(arr) {
+      var res = 0;
+      for (var i = 0; i < arr.length; i++) {
+        res += arr[i];
+      }
+      return res;
+    }
+
+
+    load_unread();
+    //unread message count
+    function load_unread() {
+      db.collection("login").doc(webtalk_id).get().then((doc)=>{
+        var unread = sum(doc.data().unread);
+        document.getElementById("tomatomessage").innerHTML = unread;
+        if (unread == 0) {
+          $("#tomatomessage").hide();
+        }
+        else {
+          $("#tomatomessage").show();
+        }
+      });
+    }
+
+
+    // tomato message realtime
+    db.collection("login").doc(webtalk_id).onSnapshot((doc)=>{
+      var unread = sum(doc.data().unread);
+      document.getElementById("tomatomessage").innerHTML =unread;
+      if (unread == 0) {
+        $("#tomatomessage").hide();
+      }
+      else {
+        $("#tomatomessage").show();
+      }
+    });
 
 
 
