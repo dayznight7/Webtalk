@@ -7,6 +7,8 @@
   <title>Document</title>
 </head>
 <body>
+
+  <div onclick="f1('a')">a</div>
   
 
 <script>
@@ -17,6 +19,10 @@ var json_1 = {
 localStorage.setItem("t1", JSON.stringify(json_1));
 var json_2 = JSON.parse(localStorage.getItem("t1"));
 console.log(json_2.id);
+
+function f1(a) {
+  console.log(a);
+}
 
 </script>
 

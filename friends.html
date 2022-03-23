@@ -208,7 +208,7 @@
         for (var i=0; i<arr_friendlist.length; i++) {
           db.collection("login").doc(arr_friendlist[i]).get().then((doc)=>{
             var tmp_friend = `
-    <div id="profile${i}" class="profile">
+    <div id="profile${i}" class="profile" onclick="view_profile('${doc.data().id}')">
       <img src="${doc.data().img}">
       <div>
         <h4>${doc.data().id}</h>
@@ -258,6 +258,12 @@
         $("#tomatomessage").show();
       }
     });
+
+
+    //localStorage 에 저장후 여기선 저장한 것을 이용하는게 필요할듯
+    function view_profile(id) {
+      console.log(id);
+    }
 
 
 
