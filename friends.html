@@ -57,20 +57,20 @@
   margin-left: 20px;
   margin-right: 40px;
 }
-#profile {
+.profile {
   margin-left: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
   align-items: center;
 }
-#profile img {
+.profile img {
   width: 60px;
   height: 60px;
   border-radius: 40%;
   margin-right: 20px;
 }
-#profile h6 {
+.profile h6 {
   color: rgba(0,0,0,0.5);
 }
 #nav {
@@ -143,29 +143,15 @@
 
     <div id="line"></div>
 
-    <div id="profile">
+    <!--
+    <div id="profile#" class="profile">
       <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
       <div>
         <h4>Github</h>
         <h6>Github.com</h>
       </div>
     </div>
-
-    <div id="profile">
-      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
-      <div>
-        <h4>Github</h>
-        <h6>Github.com</h>
-      </div>
-    </div>
-
-    <div id="profile">
-      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
-      <div>
-        <h4>Github</h>
-        <h6>Github.com</h>
-      </div>
-    </div>
+    -->
 
   </div>
 
@@ -210,9 +196,27 @@
       });
     }
 
+
+    load_profiles();
     // load profiles, compare with localStorage friendlist
     function load_profiles() {
-      db.collection("")
+      db.collection("login").doc(webtalk_id).get().then((doc) => {
+        var arr_friendlist = doc.data().friend;
+        arr_friendlist.sort();
+        for (var i=0; i<arr_friendlist.length; i++) {
+          db.collection("login").doc(arr_friendlist[i]).get().then((doc)=>{
+            var tmp_friend = `
+    <div id="profile${i}" class="profile">
+      <img src="${doc.data().img}">
+      <div>
+        <h4>${doc.data().id}</h>
+        <h6>${doc.data().intro}</h>
+      </div>
+    </div>`;
+            $("#list").append(tmp_friend);
+          });
+        }
+      });
     }
 
 
