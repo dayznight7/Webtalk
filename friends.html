@@ -121,6 +121,49 @@
   border-radius: 50%;
   font-size: 12px;
 }
+#more {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.9);
+  z-index: 1;
+  visibility: hidden;
+}
+#more img {
+  position: fixed;
+  top: 60px;
+  height: 50%;
+  border-radius: 33%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+#more_id {
+  position: relative;
+  top: 60%;
+  font-size: 48px;
+  font-weight: 600;
+}
+#more div {
+  color: white;
+  text-align: center;
+}
+#more_chat {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 60px;
+}
+#more_chat i {
+  font-size: 48px;
+}
+#more_x {
+  font-size: 48px;
+  position: fixed;
+  top: 20px;
+  right: 25px;
+}
   </style>
 </head>
 <body>
@@ -155,6 +198,17 @@
     </div>
     -->
 
+  </div>
+
+  <div id="more">
+    <img id="more_img" src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+    <div id="more_id">iu</div>
+    <div id="more_chat">
+      <i class="fa-solid fa-comment"></i>
+      <div>1:1 chat</div>
+    </div>
+    <div id="more_x" onclick="close_profile()"><i class="fa-solid fa-xmark"></i></div>
+    
   </div>
 
   <nav id="nav">
@@ -262,7 +316,12 @@
 
     //localStorage 에 저장후 여기선 저장한 것을 이용하는게 필요할듯
     function view_profile(id) {
-      console.log(id);
+      $("more").css("visibility","visible");
+    }
+
+    
+    function close_profile() {
+      $("more").css("visibility","hidden");
     }
 
 
