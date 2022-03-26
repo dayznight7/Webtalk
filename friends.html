@@ -128,7 +128,7 @@
   left: 0;
   right: 0;
   background-color: rgba(0,0,0,0.85);
-  z-index: 1; /*-3*/
+  z-index: -3; /*-3*/
 }
 #more_img {
   position: fixed;
@@ -342,7 +342,7 @@
 
       });
       document.getElementById("more").style.zIndex = "1";
-      localStorage.setItem("webtalk_1:1",id);
+      localStorage.setItem("webtalk_privateroom",id);
     }
 
     
@@ -352,7 +352,7 @@
 
 
     function room() {
-      window.open("room.html", "_blank");
+      window.open("privateroom.html", "_blank");
     }
 
 

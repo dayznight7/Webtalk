@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebTalk</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+#top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px 15px 10px;
+  background-color: #f9f9fa;
+  border-bottom: 1px solid rgba(121, 121, 121, 0.3);
+}
+#top i {
+  font-size: 24px;
+  margin: 0 6px 0 6px;
+}
+#list {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  overflow: auto;
+  padding: 10px;
+}
+.message {
+  display: flex;
+  margin-bottom: 4px;
+}
+.message img {
+  width: 50px;
+  height: 50px;
+  border-radius: 40%;
+  margin-right: 10px;
+}
+.message_skip {
+  width: 50px;
+  margin-right: 10px;
+}
+.message_sender {
+  opacity: 0.8;
+  font-size: 15px;
+  margin-bottom: 4px;
+  display: block;
+}
+.message_bubble {
+  background-color: whitesmoke;
+  padding: 8px;
+  border-radius: 15px;
+  border-top-left-radius: 0px;
+  border: 1px solid gainsboro;
+  margin-right: 5px;
+  font-size: 18px;
+}
+.message_info {
+  display: flex;
+  align-items: flex-end;
+}
+.message_time {
+  opacity: 0.8;
+  font-size: 13px;
+}
+.mymessage {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+.mymessage_info {
+  display: flex;
+  align-items: flex-end;
+}
+.mymessage_bubble {
+  background-color: whitesmoke;
+  padding: 8px;
+  border-radius: 15px;
+  border-top-right-radius: 0px;
+  border: 1px solid gainsboro;
+  font-size: 18px;
+  order: 1;
+}
+.mymessage_time {
+  opacity: 0.8;
+  font-size: 13px;
+  order: 0;
+  margin-right: 5px;
+}
+#messagechanged {
+  padding: 4px;
+}
+#send {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+  background-color: #f9f9fa;
+  border-top: 1px solid gainsboro;
+  text-align: center;
+}
+#send div {
+  display: inline-block;
+  height: 60px;
+}
+#send_plus {
+  position: fixed;
+  left: 8px;
+  bottom: -17px;
+  width: 40px;
+  font-size: 24px;
+  opacity: 0.5;
+  color: slategray;
+}
+#send_message {
+  position: fixed;
+  left: 56px;
+  right: 50px;
+}
+#send_btn {
+  position: fixed;
+  right: 6px;
+  bottom: -17px;
+  width: 40px;
+  float: left;
+  font-size: 24px;
+}
+#send div input {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  font-size: 15px;
+}
+.timestamp {
+  display: flex;
+  justify-content: center;
+  margin: 10px auto;
+  background-color: whitesmoke;
+  border: 1px solid gainsboro;
+  padding: 8px 15px;
+  border-radius: 25px;
+  width: 200px;
+}
+  </style>
+</head>
+<body>
+
+  <div id="top">
+    <div>
+      <i id="back" class="fa-solid fa-arrow-left"></i>
+    </div>
+    <div><h2>dayznight7</h2></div>
+    <div>
+      <i id="search" class="fa-solid fa-magnifying-glass"></i>
+      <i id="right" class="fa-solid fa-bars"></i>
+    </div>
+  </div>
+
+  <div id="list">
+
+    <div class="timestamp">2022-03-19 SAT</div>
+
+
+    <div id="message#" class="message">
+      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+      <div class="message_context">
+        <span class="message_sender">
+          dayznight7
+        </span>
+        <div class="message_info">
+          <span class="message_bubble">
+            Hi
+          </span>
+          <span class="message_time">
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="message#" class="message">
+      <div class="message_skip"></div>
+      <div class="message_context">
+        <div class="message_info">
+          <span class="message_bubble">
+            Hi
+          </span>
+          <span class="message_time">
+            21:27
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="messagechanged"></div>
+
+    <div id="message#" class="message">
+      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+      <div class="message_context">
+        <span class="message_sender">
+          dayznight7
+        </span>
+        <div class="message_info">
+          <span class="message_bubble">
+            Hi
+          </span>
+          <span class="message_time">
+            21:27
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="message#" class="mymessage">
+      <div class="mymessage_info">
+        <span class="mymessage_bubble">
+          Hello World!
+        </span>
+        <span class="mymessage_time">
+        </span>
+      </div>
+    </div>
+
+    <div id="message#" class="mymessage">
+      <div class="mymessage_info">
+        <span class="mymessage_bubble">
+          Hello World!
+        </span>
+        <span class="mymessage_time">
+        </span>
+      </div>
+    </div>
+
+    <div id="message#" class="mymessage">
+      <div class="mymessage_info">
+        <span class="mymessage_bubble">
+          Hello World!
+        </span>
+        <span class="mymessage_time">
+          21:27
+        </span>
+      </div>
+    </div>
+
+    <form id="send">
+      <div id="send_plus">
+        <i class="far fa-plus-square fa-lg"></i>
+      </div>
+      <div id="send_message">
+        <input type="text">
+      </div>
+      <div id="send_btn"><i class="fa-solid fa-paper-plane"></i></div>
+    </form>
+
+  </div>
+
+  <!--icon-->
+  <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
+
+  <!--firebase7/8/9 CDN (now 8)-->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase_config.js"></script>
+  
+  <!--jQuery cdn https://releases.jquery.com/ --> 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  
+  <script>
+  
+  
+    // using firestore db
+    const db = firebase.firestore();
+
+
+    // get info from localStorage
+    const webtalk_id = localStorage.getItem("webtalk_id");
+    const webtalk_privateroom = localStorage.getItem("webtalk_privateroom");
+
+
+  </script>
+
+</body>
+</html>
