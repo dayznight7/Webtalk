@@ -318,12 +318,69 @@
       }
       
       // start
-
+      db.collection("private").doc(room).get().then((doc)=>{
+        var message_length = doc.data().data.id.length;
+        var recent_id = "";
+        var recent_time = doc.data().data.time[0];
+        var tmp_timestamp = `<div class="timestamp">${getDate(recent_time)}</div>`;
+        $("#list").append(tmp_timestamp);
+        for (var i=0; i < message_length; i++) {
+          tmp_id = doc.data().data.id[i];
+          tmp_text = doc.data().data.text[i];
+          tmp_time = doc.data().data.time[i];
+          if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
+            // timestamp
+            recent_time = tmp_time(0,10) + " 99:99";
+            tmp_timestamp = `<div class="timestamp">${getDate(tmp_time)}</div>`;
+            $("#list").append(tmp_timestamp);
+          }
+          if (recent_id != tmp_id && recent_time != tmp_time) {
+            // different id, different time
+            var tmp_didt = `
+    <div id="message${i}" class="message">
+      <img src="${img}">
+      <div class="message_context">
+        <span class="message_sender">
+          ${tmp_id}
+        </span>
+        <div class="message_info">
+          <span class="message_bubble">
+            ${tmp_text}
+          </span>
+          <span class="message_time">
+            ${tmp_time.substr(11,5)}
+          </span>
+        </div>
+      </div>
+    </div>`;
+            recent_id = tmp_id;
+            recent_time = tmp_time;
+          }
+          else if (recent_id != tmp_id && recent_time == tmp_time) {
+            // different id, same time
+          }
+          else if (recent_id == tmp_id && recent_time != tmp_time) {
+            // same id, different time
+          }
+          else if (recent_id == tmp_id && recent_time == tmp_time) {
+            // same id, same time
+          }
+        }
+      });
 
 
       // end
 
     });
+
+
+    // date to day of the week (2022-03-26 16:30) => (2022-03-26 SAT)
+    function getDate(str) {
+      var week = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+      var dayOfWeek = week[new Date(str.substr(0,10)).getDay()];
+      var ans = str.substr(0,11) + dayOfWeek;
+      return ans;
+    }
 
 
   </script>
