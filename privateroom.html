@@ -276,7 +276,54 @@
 
     // get info from localStorage
     const webtalk_id = localStorage.getItem("webtalk_id");
-    const webtalk_privateroom = localStorage.getItem("webtalk_privateroom");
+    const webtalk_id2 = localStorage.getItem("webtalk_privateroom");
+
+    var tmp1 = webtalk_id;
+    var tmp2 = webtalk_id2;
+    if (tmp1 > tmp2) { 
+        tmp1 = webtalk_id2;
+        tmp2 = webtalk_id;
+      }
+
+    db.collection("private").where("id1","==",tmp1).where("id2","==",tmp2).get()
+    .then((querySnapshot)=>{
+
+      // important
+      var room;
+
+      if (querySnapshot.empty) {
+        // if there is no room
+        db.collection("private").doc("status").get().then((doc)=>{
+            
+          room = String(doc.data().length)
+          // making 1:1 room
+          db.collection("private").doc(room).set({
+            data: {
+              id: [],
+              text: [],
+              time: []
+            },
+            id1: tmp1,
+            id2: tmp2
+          });
+          // status refresh
+          db.collection("private").doc("status").set({
+            length: Number(room) + 1
+          });
+        });
+      }
+      else { 
+        // already have room
+        room = querySnapshot.docs[0].id;
+      }
+      
+      // start
+
+
+
+      // end
+
+    });
 
 
   </script>

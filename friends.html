@@ -341,12 +341,13 @@
         document.getElementById("more_img").src = doc.data().img;
 
       });
-      document.getElementById("more").style.zIndex = "1";
       localStorage.setItem("webtalk_privateroom",id);
+      document.getElementById("more").style.zIndex = "1";
     }
 
     
     function close_profile() {
+      localStorage.removeItem("webtalk_privateroom");
       document.getElementById("more").style.zIndex = "-3";
     }
 
