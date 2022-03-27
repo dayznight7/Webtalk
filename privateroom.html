@@ -25,7 +25,7 @@
   right: 0;
   bottom: 60px;
   overflow: auto;
-  padding: 10px;
+  padding: 0 10px 10px 10px;
 }
 .message {
   display: flex;
@@ -143,6 +143,7 @@
   padding: 8px 15px;
   border-radius: 25px;
   width: 200px;
+  margin-top: 30px;
 }
   </style>
 </head>
@@ -161,100 +162,19 @@
 
   <div id="list">
 
-    <div class="timestamp">2022-03-19 SAT</div>
-
-
-    <div id="message#" class="message">
-      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
-      <div class="message_context">
-        <span class="message_sender">
-          dayznight7
-        </span>
-        <div class="message_info">
-          <span class="message_bubble">
-            Hi
-          </span>
-          <span class="message_time">
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div id="message#" class="message">
-      <div class="message_skip"></div>
-      <div class="message_context">
-        <div class="message_info">
-          <span class="message_bubble">
-            Hi
-          </span>
-          <span class="message_time">
-            21:27
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div id="messagechanged"></div>
-
-    <div id="message#" class="message">
-      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
-      <div class="message_context">
-        <span class="message_sender">
-          dayznight7
-        </span>
-        <div class="message_info">
-          <span class="message_bubble">
-            Hi
-          </span>
-          <span class="message_time">
-            21:27
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div id="message#" class="mymessage">
-      <div class="mymessage_info">
-        <span class="mymessage_bubble">
-          Hello World!
-        </span>
-        <span class="mymessage_time">
-        </span>
-      </div>
-    </div>
-
-    <div id="message#" class="mymessage">
-      <div class="mymessage_info">
-        <span class="mymessage_bubble">
-          Hello World!
-        </span>
-        <span class="mymessage_time">
-        </span>
-      </div>
-    </div>
-
-    <div id="message#" class="mymessage">
-      <div class="mymessage_info">
-        <span class="mymessage_bubble">
-          Hello World!
-        </span>
-        <span class="mymessage_time">
-          21:27
-        </span>
-      </div>
-    </div>
-
-    <form id="send">
-      <div id="send_plus">
-        <i class="far fa-plus-square fa-lg"></i>
-      </div>
-      <div id="send_message">
-        <input type="text">
-      </div>
-      <div id="send_btn"><i class="fa-solid fa-paper-plane"></i></div>
-    </form>
+    
 
   </div>
+
+  <form id="send">
+    <div id="send_plus">
+      <i class="far fa-plus-square fa-lg"></i>
+    </div>
+    <div id="send_message">
+      <input type="text">
+    </div>
+    <div id="send_btn"><i class="fa-solid fa-paper-plane"></i></div>
+  </form>
 
   <!--icon-->
   <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
@@ -278,18 +198,24 @@
     const webtalk_id = localStorage.getItem("webtalk_id");
     const webtalk_id2 = localStorage.getItem("webtalk_privateroom");
 
+
+    // check who is first id1 vs id2
     var tmp1 = webtalk_id;
     var tmp2 = webtalk_id2;
     if (tmp1 > tmp2) { 
         tmp1 = webtalk_id2;
         tmp2 = webtalk_id;
       }
+    
 
+    // #####load chat data#####
     db.collection("private").where("id1","==",tmp1).where("id2","==",tmp2).get()
     .then((querySnapshot)=>{
 
-      // important
+
+      // private => doc(room)
       var room;
+
 
       if (querySnapshot.empty) {
         // if there is no room
@@ -304,74 +230,126 @@
               time: []
             },
             id1: tmp1,
-            id2: tmp2
+            id2: tmp2,
+            img1: "",
+            img2: ""
           });
           // status refresh
-          db.collection("private").doc("status").set({
-            length: Number(room) + 1
-          });
+          db.collection("private").doc("status").update({ length: Number(room) + 1 });
         });
       }
       else { 
         // already have room
         room = querySnapshot.docs[0].id;
       }
+
+
+      // load img1, img2
+      db.collection("login").doc(tmp1).get().then((doc)=>{
+        db.collection("private").doc(room).update({
+          img1: doc.data().img
+        });
+      });
+      db.collection("login").doc(tmp2).get().then((doc)=>{
+        db.collection("private").doc(room).update({
+          img2: doc.data().img
+        });
+      });
       
+
       // start
       db.collection("private").doc(room).get().then((doc)=>{
+
+
         var message_length = doc.data().data.id.length;
         var recent_id = "";
         var recent_time = doc.data().data.time[0];
+        var opp_img= doc.data().img1;
+        if (tmp1 == webtalk_id) { opp_img = doc.data().img2; }
         var tmp_timestamp = `<div class="timestamp">${getDate(recent_time)}</div>`;
         $("#list").append(tmp_timestamp);
+
+
         for (var i=0; i < message_length; i++) {
+
           tmp_id = doc.data().data.id[i];
           tmp_text = doc.data().data.text[i];
           tmp_time = doc.data().data.time[i];
+          
+          // timestamp
           if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
-            // timestamp
             recent_time = tmp_time(0,10) + " 99:99";
-            tmp_timestamp = `<div class="timestamp">${getDate(tmp_time)}</div>`;
+            tmp_timestamp = `
+            <div class="timestamp">${getDate(tmp_time)}</div>
+            `;
             $("#list").append(tmp_timestamp);
           }
-          if (recent_id != tmp_id && recent_time != tmp_time) {
-            // different id, different time
-            var tmp_didt = `
-    <div id="message${i}" class="message">
-      <img src="${img}">
-      <div class="message_context">
-        <span class="message_sender">
-          ${tmp_id}
-        </span>
-        <div class="message_info">
-          <span class="message_bubble">
-            ${tmp_text}
-          </span>
-          <span class="message_time">
-            ${tmp_time.substr(11,5)}
-          </span>
-        </div>
-      </div>
-    </div>`;
+          
+          // my message
+          if (tmp_id == webtalk_id) {
+            
+            if (recent_id == tmp_id && recent_time == tmp_time) {
+              // delete before time
+              document.getElementById("mtime"+String(i-1)).innerHTML = "";
+            }
+            else {
+              // term
+              $("#list").append(`<div id="messagechanged"></div>`);
+            }
+            var tmp_mymessage = `
+            <div class="mymessage">
+              <div class="mymessage_info">
+                <span class="mymessage_bubble">${tmp_text}</span>
+                <span id="mtime${i}" class="mymessage_time">${tmp_time.substr(11,5)}</span>
+              </div>
+            </div>
+            `;
+            $("#list").append(tmp_mymessage);
             recent_id = tmp_id;
             recent_time = tmp_time;
           }
-          else if (recent_id != tmp_id && recent_time == tmp_time) {
-            // different id, same time
-          }
-          else if (recent_id == tmp_id && recent_time != tmp_time) {
-            // same id, different time
-          }
-          else if (recent_id == tmp_id && recent_time == tmp_time) {
-            // same id, same time
+
+          // opp message
+          else {
+
+            if (recent_id == tmp_id && recent_time == tmp_time) {
+              document.getElementById("mtime"+String(i-1)).innerHTML = ""
+              var tmp_oppmessage = `
+              <div class="message">
+                <div class="message_skip"></div>
+                <div class="message_context">
+                  <div class="message_info">
+                    <span class="message_bubble">${tmp_text}</span>
+                    <span class="message_time">${tmp_time.substr(11,5)}</span>
+                  </div>
+                </div>
+              </div>
+              `;
+              $("#list").append(tmp_oppmessage);
+            }
+            else {
+              $("#list").append(`<div id="messagechanged"></div>`);
+              var tmp_oppmessage = `
+              <div class="message">
+                <img src="${opp_img}">
+                <div class="message_context">
+                  <span class="message_sender">${tmp_id}</span>
+                  <div class="message_info">
+                    <span class="message_bubble">${tmp_text}</span>
+                    <span id="mtime${i}" class="message_time">${tmp_time.substr(11,5)}</span>
+                  </div>
+                </div>
+              </div>`;
+              $("#list").append(tmp_oppmessage);
+            }
+            recent_id = tmp_id;
+            recent_time = tmp_time;
           }
         }
       });
 
-
-      // end
-
     });
+    // #####load chat data#####
 
 
     // date to day of the week (2022-03-26 16:30) => (2022-03-26 SAT)
@@ -381,6 +359,10 @@
       var ans = str.substr(0,11) + dayOfWeek;
       return ans;
     }
+
+
+    // input
+    // unread live
 
 
   </script>
