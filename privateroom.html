@@ -345,6 +345,9 @@
             recent_time = tmp_time;
           }
         }
+
+        updateScroll()
+
       });
 
       
@@ -371,6 +374,9 @@
 
           });
 
+          // what i send show on my screen too
+          updateScroll()
+
         }
       });
 
@@ -393,6 +399,13 @@
     // get time str format "YYYY-MM-DD HH:MM" 
     function getTime() {
       return new Date(+new Date() + 3240 * 10000).toISOString().replace("T", " ").replace(/\..*/, '');
+    }
+
+
+    // scroll bottom 
+    function updateScroll() {
+      var element = document.getElementById("list");
+      list.scrollTop = element.scrollHeight;
     }
 
 
