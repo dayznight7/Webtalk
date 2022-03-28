@@ -351,6 +351,7 @@
       });
 
       
+      // send server data, screen, give unread
       $("#sendMessage").on("keyup",function(key){
         if (key.keyCode == 13) {
 
@@ -372,15 +373,30 @@
               time: arr_time
             });
 
-          });
+            var tmp_mymessage = `
+            <div class="mymessage">
+              <div class="mymessage_info">
+                <span class="mymessage_bubble">${input_text}</span>
+                <span id="mtime${arr_time.length-1}" class="mymessage_time">${arr_time[arr_time.length-1].substr(11,5)}</span>
+              </div>
+            </div>`;
+            if (arr_id[arr_id.length-2] == arr_id[arr_id.length-1] 
+            && arr_time[arr_time.length-2].substr(0,16) == arr_time[arr_time.length-1].substr(0,16)) {
+              document.getElementById("mtime"+String(arr_id.length-2)).innerHTML = "";
+            }
+            else {
+              $("#list").append(`<div id="messagechanged"></div>`);
+            }
 
-          // what i send show on my screen too
-          updateScroll()
+            $("#list").append(tmp_mymessage);
+            updateScroll()
+
+          });
 
         }
       });
 
-
+      // unread live active, get message from db 
 
 
     });
