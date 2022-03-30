@@ -235,6 +235,32 @@
           });
           // status refresh
           db.collection("private").doc("status").update({ length: Number(room) + 1 });
+
+          // refresh unread, room arr
+          db.collection("login").doc(tmp1).get().then((doc)=>{
+            var arr_room = doc.data().room;
+            arr_room[arr_room.length] = room;
+            var arr_unread = doc.data().unread;
+            arr_unread[arr_unread.length] = 0;
+
+            db.collection("login").doc(tmp1).update({
+              room: arr_room,
+              unread: arr_unread
+            });
+          });
+          // refresh unread, room arr
+          db.collection("login").doc(tmp2).get().then((doc)=>{
+            var arr_room = doc.data().room;
+            arr_room[arr_room.length] = room;
+            var arr_unread = doc.data().unread;
+            arr_unread[arr_unread.length] = 0;
+
+            db.collection("login").doc(tmp2).update({
+              room: arr_room,
+              unread: arr_unread
+            });
+          });
+
         });
       }
       else { 
@@ -348,6 +374,16 @@
 
         updateScroll()
 
+        //update unread to zero
+        db.collection("login").doc(webtalk_id).get().then((doc)=>{
+          var arr_room = doc.data().room;
+          var arr_unread = doc.data().unread;
+          arr_unread[arr_room.indexOf(room)] = 0;
+          db.collection("login").doc(webtalk_id).update({
+            unread: arr_unread
+          });
+        });
+
       });
 
       
@@ -358,6 +394,7 @@
           var input_text = document.getElementById("sendMessage").value;
           document.getElementById("sendMessage").value = "";
 
+          // update message
           db.collection("private").doc(room).get().then((doc)=>{
 
             var arr_id = doc.data().id;
@@ -393,17 +430,97 @@
 
           });
 
+          // update unread
+          db.collection("login").doc(webtalk_id2).get().then((doc)=>{
+
+            var arr_room = doc.data().room;
+            var arr_unread = doc.data().unread;
+            arr_unread[arr_room.indexOf(room)] += 1;
+
+            db.collection("login").doc(webtalk_id2).update({
+              unread: arr_unread
+            });
+          });
+
         }
       });
 
       // unread live active, get message from db 
+      db.collection("login").doc(webtalk_id).onSnapshot((doc)=>{
 
+        var arr_room = doc.data().room;
+        var arr_unread = doc.data().unread;
+        var num_unread = arr_unread[arr_room.indexOf(room)];
+        if (num_unread != 0) {
+
+          db.collection("private").doc(room).get().then((doc)=>{
+
+            var message_length = doc.data().time.length;
+            var readed = message_length - num_unread;
+            var recent_id = doc.data().id[readed-1];
+            var recent_time = doc.data().time[readed-1].substr(0,16);
+            var opp_img= doc.data().img1;
+            if (tmp1 == webtalk_id) { opp_img = doc.data().img2; }
+
+            for (var i=readed; i < message_length; i++) {
+              // opp message load
+              tmp_id = doc.data().id[i];
+              tmp_text = doc.data().text[i];
+              tmp_time = doc.data().time[i].substr(0,16);
+              // timestamp
+              if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
+                recent_time = tmp_time.substr(0,10) + " 99:99";
+                tmp_timestamp = `<div class="timestamp">${getDate(tmp_time)}</div>`;
+                $("#list").append(tmp_timestamp);
+              }
+              // message part
+              if (recent_id == tmp_id && recent_time == tmp_time) {
+                document.getElementById("mtime"+String(i-1)).innerHTML = ""
+                var tmp_oppmessage = `
+                <div class="message">
+                  <div class="message_skip"></div>
+                  <div class="message_context">
+                    <div class="message_info">
+                      <span class="message_bubble">${tmp_text}</span>
+                      <span class="message_time">${tmp_time.substr(11,5)}</span>
+                    </div>
+                  </div>
+                </div>
+                `;
+                $("#list").append(tmp_oppmessage);
+              }
+              else {
+                $("#list").append(`<div id="messagechanged"></div>`);
+                var tmp_oppmessage = `
+                <div class="message">
+                  <img src="${opp_img}">
+                  <div class="message_context">
+                    <span class="message_sender">${tmp_id}</span>
+                    <div class="message_info">
+                      <span class="message_bubble">${tmp_text}</span>
+                      <span id="mtime${i}" class="message_time">${tmp_time.substr(11,5)}</span>
+                    </div>
+                  </div>
+                </div>`;
+                $("#list").append(tmp_oppmessage);
+              }
+              recent_id = tmp_id;
+              recent_time = tmp_time;
+            }
+
+          });
+
+          
+        }
+      });
+
+      // unread live
 
     });
     // #####load chat data#####
 
 
-    // date to day of the week (2022-03-26 16:30) => (2022-03-26 SAT)
+    // date to day of the week (2022-03-26 16:30:00) => (2022-03-26 SAT)
     function getDate(str) {
       var week = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
       var dayOfWeek = week[new Date(str.substr(0,10)).getDay()];
