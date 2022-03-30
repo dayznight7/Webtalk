@@ -506,10 +506,20 @@
               }
               recent_id = tmp_id;
               recent_time = tmp_time;
+              updateScroll()
             }
 
           });
 
+          //update unread to zero
+          db.collection("login").doc(webtalk_id).get().then((doc)=>{
+            var arr_room = doc.data().room;
+            var arr_unread = doc.data().unread;
+            arr_unread[arr_room.indexOf(room)] = 0;
+            db.collection("login").doc(webtalk_id).update({
+              unread: arr_unread
+            });
+          });
           
         }
       });
