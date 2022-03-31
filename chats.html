@@ -186,11 +186,29 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="js/firebase_config.js"></script>
 
+  <!--jQuery cdn https://releases.jquery.com/ --> 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  
   <script>
 
 
     // using firestore db
     const db = firebase.firestore();
+
+
+    const webtalk_id = localStorage.getItem("webtalk_id");
+
+
+    // get rooms from arr_room
+    db.collection("login").doc(webtalk_id).get().then((doc)=>{
+      var arr_room = doc.data().room;
+      var arr_unread = doc.data().room;
+
+      // working here
+      // when last unread goes top
+      // should find other way, not append
+      console.log(arr_room);
+    });
 
 
     function nav_friends() { location.replace("friends.html"); }
