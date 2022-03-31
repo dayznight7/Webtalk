@@ -33,7 +33,7 @@
   right: 0;
   overflow: auto;
 }
-#profile {
+.profile {
   margin-left: 20px;
   margin-right: 40px;
   padding-top: 10px;
@@ -42,22 +42,22 @@
   align-items: center;
   justify-content: space-between;
 }
-#profile img {
+.profile img {
   width: 60px;
   height: 60px;
   border-radius: 40%;
   margin-right: 20px;
 }
-#prechatting {
+.prechatting {
   display: flex;
 }
-#prechatting div h3 {
+.prechatting div h3 {
   padding-top: 8px;
 }
-#prechatting div h4 {
+.prechatting div h4 {
   color: rgba(0,0,0,0.7);
 }
-#timebadge {
+.timebadge {
   color: rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
@@ -121,15 +121,15 @@
 
   <div id="list">
 
-    <div id="profile">
-      <div id="prechatting">
+    <div class="profile">
+      <div class="prechatting">
         <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
         <div>
           <h3>Github</h3>
           <h4>Github.com</h4>
         </div>
       </div>
-      <div id="timebadge">
+      <div class="timebadge">
         <span>12:00</span>
         <div class="badge">
           2
@@ -137,37 +137,7 @@
       </div>
     </div>
 
-    <div id="profile">
-      <div id="prechatting">
-        <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
-        <div>
-          <h3>Github</h3>
-          <h4>Github.com</h4>
-        </div>
-      </div>
-      <div id="timebadge">
-        <span>12:00</span>
-        <div class="badge">
-          2
-        </div>
-      </div>
-    </div>
-
-    <div id="profile">
-      <div id="prechatting">
-        <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
-        <div>
-          <h3>Github</h3>
-          <h4>Github.com</h4>
-        </div>
-      </div>
-      <div id="timebadge">
-        <span>12:00</span>
-        <div class="badge">
-          2
-        </div>
-      </div>
-    </div>
+    
 
   </div>
 
@@ -203,10 +173,30 @@
     db.collection("login").doc(webtalk_id).get().then((doc)=>{
       var arr_room = doc.data().room;
       var arr_unread = doc.data().room;
+      var num_room = arr_room.length;
+
+      for (var i=0; i < num_room; i++) {
+
+        var tmp_room = `
+        <div id="profile${i}" class="profile">
+          <div class="prechatting">
+            <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+            <div>
+              <h3>Github</h3>
+              <h4>Github.com</h4>
+            </div>
+          </div>
+          <div class="timebadge">
+            <span>12:00</span>
+            <div id="badge${i}" class="badge">${arr_unread[i]}</div>
+          </div>
+        </div>`;
+
+      }
 
       // working here
       // when last unread goes top
-      // should find other way, not append
+      // should find other way, not append, prepend
       console.log(arr_room);
     });
 
