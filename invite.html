@@ -19,6 +19,9 @@
   font-size: 32px;
   font-weight: 600;
 }
+#top div {
+  font-size: 24px;
+}
 #chatadd {
   font-size: 20px;
 }
@@ -106,17 +109,93 @@
 #nav_setting {
   font-size: 20px;
 }
+#back {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: -1;
+}
+#choose {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: -3; /*-3*/
+}
+#choosetop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 30px;
+}
+#choosetop div {
+  font-size: 24px;
+}
+#chooselist {
+  position: fixed;
+  bottom: 0;
+  top: 60px;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+.profile2 {
+  margin-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.profile2 img {
+  width: 60px;
+  height: 60px;
+  transform: translate(50,50);
+  object-fit: cover;
+  border-radius: 40%;
+  margin-right: 20px;
+}
+.profile2 h6 {
+  color: rgba(0,0,0,0.5);
+}
+.checking {
+  position: relative;
+  right: -185px;
+  content:"";
+  display:inline-block;
+  width:17px;
+  height:17px;
+  line-height:17px;
+  border:1px solid #cbcbcb;
+  vertical-align:middle;
+}
+.checking:checked {
+  content:"\f00c";
+  font-family:"Font Awesome 5 free";
+  font-weight:900;
+  color:#fff;
+  background-color:#000;
+  border-color:#000;
+  font-size:13px;
+  text-align:center;
+}
   </style>
 </head>
 <body>
 
   <div id="top">
-    <h1>Chats</h1>
-    <div id="icon">
-      <span><i class="fas fa-search fa-lg"></i></span>
-      <span onclick="make_chat()"><i id="chatadd" class="fas fa-comment-medical"></i></span>
-      <span><i class="fas fa-cog fa-lg"></i></span>
+    <div onclick="make_cancel()">
+      <i class="fa-solid fa-arrow-left"></i>
     </div>
+    <h1>Invite</h1>
+    <div onclick="make_fin()"><i class="fa-solid fa-check"></i></div>
   </div>
 
   <div id="list">
@@ -137,8 +216,25 @@
       </div>
     </div>
 
+    
+
   </div>
 
+  <div id="back"></div>
+
+  <div id="choose">
+
+    <div id="choosetop">
+      <div onclick="make_cancel()"><i class="fa-solid fa-arrow-left"></i></div>
+      <div><h3>Invite</h3></div>
+      <div onclick="make_fin()"><i class="fa-solid fa-check"></i></div>
+    </div>
+    
+    <div id="chooselist">
+
+    </div>
+
+  </div>
 
   <nav id="nav">
     <div id="nav_friends" onclick="nav_friends()"><i class="far fa-user fa-lg"></i></div>
@@ -258,6 +354,56 @@
       return new Date(+new Date() + 3240 * 10000).toISOString().replace("T", " ").replace(/\..*/, '');
     }
 
+
+    function make_chat() {
+      document.getElementById("choose").style.zIndex = "1";
+    }
+
+    function make_cancel() {
+      document.getElementById("choose").style.zIndex = "-3";
+    }
+
+    function make_fin() {
+      if (arr_invited.length > 1) {
+        console.log(arr_invited);
+        document.getElementById("choose").style.zIndex = "-3";
+      }
+      else {
+        console.log(arr_invited);
+      }
+    }
+
+    load_profiles();
+    // load profiles, compare with localStorage friendlist
+    function load_profiles() {
+      db.collection("login").doc(webtalk_id).get().then((doc) => {
+        var arr_friendlist = doc.data().friend;
+        arr_friendlist.sort();
+        for (var i=0; i<arr_friendlist.length; i++) {
+          var j = i;
+          db.collection("login").doc(arr_friendlist[j]).get().then((doc)=>{
+            console.log("j=i",j,i);
+            var tmp_friend = `
+            <div id="profile${j}" class="profile2">
+              <img src="${doc.data().img}">
+              <div>
+                <h4>${doc.data().id}</h>
+                <h6>${doc.data().intro}</h>
+              </div>
+              <div>
+                <input id="check${j}" class="checking" type="checkbox" onclick="invite_room('${doc.data().id}')">
+              </div>
+            </div>`;
+            $("#chooselist").append(tmp_friend);
+          });
+        }
+      });
+    }
+
+    var arr_invited = [];
+    function invite_room(str) {
+      arr_invited[arr_invited.length] = str;
+    }
 
     function nav_friends() { location.replace("friends.html"); }
     function nav_chats() { location.replace("chats.html"); }
