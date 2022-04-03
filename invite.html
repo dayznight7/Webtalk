@@ -19,11 +19,11 @@
   font-size: 32px;
   font-weight: 600;
 }
-#top div {
-  font-size: 24px;
-}
 #chatadd {
   font-size: 20px;
+}
+#icon {
+  font-size: 24px;
 }
 #icon span {
   margin-left: 25px;
@@ -37,8 +37,8 @@
   overflow: auto;
 }
 .profile {
-  margin-left: 20px;
-  margin-right: 40px;
+  margin-left: 15px;
+  margin-right: 38px;
   padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
@@ -46,38 +46,26 @@
   justify-content: space-between;
 }
 .profile img {
-  width: 60px;
-  height: 60px;
+  transform: translate(-40%,0);
+  object-fit: cover;
+  width: 40px;
+  height: 40px;
   border-radius: 40%;
-  margin-right: 20px;
+  margin-left: 20px;
 }
-.prechatting {
+.profile_info {
   display: flex;
-}
-.prechatting div h3 {
-  padding-top: 8px;
-}
-.prechatting div h4 {
-  color: rgba(0,0,0,0.7);
-}
-.timebadge {
-  color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-.badge {
-  display: block;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: tomato;
+}
+.check_invite {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  color: white;
-  font-weight: 600;
-  font-size: 12px;
+  cursor: pointer;
+}
+.check_invite:checked {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 #nav {
   box-sizing: border-box;
@@ -115,11 +103,11 @@
 <body>
 
   <div id="top">
-    <div onclick="make_cancel()">
-      <i class="fa-solid fa-arrow-left"></i>
-    </div>
     <h1>Invite</h1>
-    <div onclick="make_fin()"><i class="fa-solid fa-check"></i></div>
+    <div id="icon">
+      <span onclick="done()"><i class="fa-solid fa-check"></i></span>
+      <span onclick="cancel()"><i class="fa-solid fa-xmark"></i></span>
+    </div>
   </div>
 
   <div id="list">
@@ -129,7 +117,7 @@
 
   <nav id="nav">
     <div id="nav_friends" onclick="nav_friends()"><i class="far fa-user fa-lg"></i></div>
-    <div id="nav_chats" onclick="nav_chats()"><i class="fas fa-comment fa-lg"></i></div>
+    <div id="nav_chats" onclick="nav_chats()"><i class="far fa-comment fa-lg"></i></div>
     <div id="nav_search" onclick="nav_search()"><i class="fa-regular fa-square-plus"></i></div>
     <div id="nav_setting" onclick="nav_setting()"><i class="fa-regular fa-circle-user"></i></div>
   </nav>
@@ -156,12 +144,93 @@
 
 
     // get rooms from arr_room
-    
+    db.collection("login").doc(webtalk_id).get().then((doc)=>{
 
-    
-    // get time str format "YYYY-MM-DD HH:MM" 
-    function getTime() {
-      return new Date(+new Date() + 3240 * 10000).toISOString().replace("T", " ").replace(/\..*/, '');
+      var arr_friend = doc.data().friend;
+
+      for (var i=0; i<arr_friend.length; i++)  {
+        var j = i;
+
+        db.collection("login").doc(arr_friend[j]).get().then((doc)=>{
+          var str_id = doc.data().id;
+          var str_img = doc.data().img;
+          var tmp_check = `
+          <div class="profile">
+            <div class="profile_info">
+              <img src="${str_img}">
+              <div>
+                <h3>${str_id}</h3>
+              </div>
+            </div>
+            <div class="add">
+              <input class="check_invite" type="checkbox" onclick="invite_check('${str_id}')">
+            </div>
+          </div>`;
+          $("#list").append(tmp_check);
+        });
+
+      }
+
+    });
+
+
+    arr_invited = [webtalk_id];
+    function invite_check(str) {
+      var iswhere = arr_invited.indexOf(str);
+      if (iswhere == -1) {
+        arr_invited[arr_invited.length] = str;
+      }
+      else {
+        for (var i=0; i<arr_invited.length; i++) {
+          if (arr_invited[i] == str) {
+            arr_invited.splice(i,1);
+            i--;
+          }
+        }
+      }
+    }
+
+
+    function cancel() {
+      location.replace("chats.html");
+    }
+
+
+    function done() {
+      if (arr_invited.length >= 3) {
+
+        db.collection("public").doc("status").get().then((doc1)=>{
+          var num_len = doc1.data().length;
+
+          db.collection("public").doc(String(num_len)).set({
+            ids: arr_invited,
+            imgs: [],
+            logo: "https://cdn-icons-png.flaticon.com/512/38/38401.png",
+            id: [],
+            text: [],
+            time: []
+          });
+          
+          for (var i=0; i<arr_invited.length; i++) {
+            var dbRef = db.collection("login").doc(arr_invited[i]);
+            dbRef.update({
+              room: firebase.firestore.FieldValue.arrayUnion(String(num_len))
+            });
+
+          }
+
+          db.collection("public").doc("status").update({ length: num_len - 1 });
+
+        });
+
+      }
+      else {
+        // red message?
+        console.log("choose more than one!")
+      }
+
+
+
     }
 
 
