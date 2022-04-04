@@ -210,18 +210,22 @@
             text: [],
             time: []
           });
-          
-          for (var i=0; i<arr_invited.length; i++) {
-            var dbRef = db.collection("login").doc(arr_invited[i]);
-            dbRef.update({
-              room: firebase.firestore.FieldValue.arrayUnion(String(num_len))
-            });
-
-          }
 
           db.collection("public").doc("status").update({ length: num_len - 1 });
 
         });
+        
+        
+        // transaction failed to use in loop
+        var sfDocRef = db.collection("login").doc(arr_invited[1]);
+        return db.runTransaction((transaction)=>{
+            return transaction.get(sfDocRef).then((sfDoc)=>{
+              var arr_unread = sfDoc.data().unread;
+              arr_unread[arr_unread.length] = 0;
+              transaction.update(sfDocRef, { unread: arr_unread });
+            });
+        });
+
 
       }
       else {
