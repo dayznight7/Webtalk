@@ -133,6 +133,9 @@
   <!--jQuery cdn https://releases.jquery.com/ --> 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   
+  <!--sweetalert cdn https://sweetalert.js.org/guides/-->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
   <script>
 
 
@@ -197,44 +200,56 @@
 
 
     function done() {
+
+      arr_invited.sort();
+
       if (arr_invited.length >= 3) {
 
         db.collection("public").doc("status").get().then((doc1)=>{
           var num_len = doc1.data().length;
+          var str_name = webtalk_id + "'s room #" + String(num_len);
 
           db.collection("public").doc(String(num_len)).set({
             ids: arr_invited,
+            logo: "",
+            name: str_name,
             imgs: [],
-            logo: "https://cdn-icons-png.flaticon.com/512/38/38401.png",
             id: [],
             text: [],
             time: []
           });
 
+          db.collection("login").doc(webtalk_id).get().then((doc)=>{
+            var str_logo = doc.data().img;
+            db.collection("public").doc(String(num_len)).update({ logo: str_logo });
+          });
+
           db.collection("public").doc("status").update({ length: num_len - 1 });
 
-        });
-        
-        
-        // transaction failed to use in loop
-        var sfDocRef = db.collection("login").doc(arr_invited[1]);
-        return db.runTransaction((transaction)=>{
-            return transaction.get(sfDocRef).then((sfDoc)=>{
-              var arr_unread = sfDoc.data().unread;
-              arr_unread[arr_unread.length] = 0;
-              transaction.update(sfDocRef, { unread: arr_unread });
+          for (var i=0; i<arr_invited.length; i++) {
+            var dbRef = db.collection("login").doc(arr_invited[i]);
+            dbRef.update({
+              room: firebase.firestore.FieldValue.arrayUnion(String(num_len)),
+              unread: firebase.firestore.FieldValue.arrayUnion(num_len)
             });
+          }
+
         });
 
+        swal({
+          title: "Success!",
+          text: "",
+          icon: "success",
+        }).then(function(){ location.replace("chats.html"); });
 
       }
       else {
-        // red message?
-        console.log("choose more than one!")
+        swal({
+          title: "Failed",
+          text: "Please check if you selected at least 2 people",
+          icon: "error",
+        })
       }
-
-
-
     }
 
 
