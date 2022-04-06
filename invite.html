@@ -213,7 +213,7 @@
             ids: arr_invited,
             logo: "",
             name: str_name,
-            imgs: [],
+            imgs: arr_invited,
             id: [],
             text: [],
             time: []
@@ -228,10 +228,18 @@
 
           for (var i=0; i<arr_invited.length; i++) {
             var dbRef = db.collection("login").doc(arr_invited[i]);
-            dbRef.update({
-              room: firebase.firestore.FieldValue.arrayUnion(String(num_len)),
-              unread: firebase.firestore.FieldValue.arrayUnion(num_len)
-            });
+            dbRef.get().then((doc)=>{
+              var arr_unread = doc.data().unread;
+              var arr_room = doc.data().room;
+              var str_img = doc.data().img;
+              var str_id = doc.data().id;
+              arr_unread[arr_unread.length] = 0;
+              arr_room[arr_room.length] = num_len;
+              db.collection("login").doc(str_id).update({
+                room: arr_room,
+                unread: arr_unread
+              });
+            })
           }
 
         });

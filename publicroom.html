@@ -196,77 +196,26 @@
 
     // get info from localStorage
     var webtalk_id = localStorage.getItem("webtalk_id");
-    var webtalk_id2 = localStorage.getItem("webtalk_privateroom");
+    var webtalk_room = localStorage.getItem("webtalk_publicroom");
 
-
-    // check who is first id1 vs id2
-    var tmp1 = webtalk_id;
-    var tmp2 = webtalk_id2;
-    if (tmp1 > tmp2) { 
-        tmp1 = webtalk_id2;
-        tmp2 = webtalk_id;
-      }
-    
 
     // #####load chat data#####
-    db.collection("private").where("id1","==",tmp1).where("id2","==",tmp2).get()
-    .then((querySnapshot)=>{
+    db.collection("login").doc(webtalk_id).get().then((doc)=>{
 
+      var str_img = doc.data().img;
 
-      // private => doc(room)
-      var room;
+      db.collection("public").doc(webtalk_room).get().then((doc)=>{
+        var arr_invited = doc.data().ids;
+        var num_mylocation = arr_invited.indexOf(webtalk_id);
+        var arr_imgs = doc.data().imgs;
+        arr_imgs[num_mylocation] = str_img;
 
+        db.collection("public").doc(webtalk_room).update({
+          imgs: arr_imgs
+        })
 
-      if (querySnapshot.empty) {
-        // if there is no room
-        db.collection("private").doc("status").get().then((doc)=>{
-            
-          room = String(doc.data().length)
-          // making 1:1 room
-          db.collection("private").doc(room).set({
-            id: [],
-            text: [],
-            time: [],
-            id1: tmp1,
-            id2: tmp2,
-            img1: "",
-            img2: ""
-          });
-          // status refresh
-          db.collection("private").doc("status").update({ length: Number(room) + 1 });
-
-          // refresh unread, room arr
-          db.collection("login").doc(tmp1).get().then((doc)=>{
-            var arr_room = doc.data().room;
-            arr_room[arr_room.length] = room;
-            var arr_unread = doc.data().unread;
-            arr_unread[arr_unread.length] = 0;
-
-            db.collection("login").doc(tmp1).update({
-              room: arr_room,
-              unread: arr_unread
-            });
-          });
-          // refresh unread, room arr
-          db.collection("login").doc(tmp2).get().then((doc)=>{
-            var arr_room = doc.data().room;
-            arr_room[arr_room.length] = room;
-            var arr_unread = doc.data().unread;
-            arr_unread[arr_unread.length] = 0;
-
-            db.collection("login").doc(tmp2).update({
-              room: arr_room,
-              unread: arr_unread
-            });
-          });
-
-        });
-      }
-      else { 
-        // already have room
-        room = querySnapshot.docs[0].id;
-      }
-
+      });
+    });
 
       // load img1, img2
       db.collection("login").doc(tmp1).get().then((doc)=>{
