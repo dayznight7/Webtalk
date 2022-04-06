@@ -203,7 +203,7 @@
     db.collection("login").doc(webtalk_id).get().then((doc)=>{
 
       var str_img = doc.data().img;
-
+      // update img
       db.collection("public").doc(webtalk_room).get().then((doc)=>{
         var arr_invited = doc.data().ids;
         var num_mylocation = arr_invited.indexOf(webtalk_id);
@@ -216,75 +216,192 @@
 
       });
     });
-
-      // load img1, img2
-      db.collection("login").doc(tmp1).get().then((doc)=>{
-        db.collection("private").doc(room).update({
-          img1: doc.data().img
-        });
-      });
-      db.collection("login").doc(tmp2).get().then((doc)=>{
-        db.collection("private").doc(room).update({
-          img2: doc.data().img
-        });
-      });
       
 
-      // start
-      db.collection("private").doc(room).get().then((doc)=>{
+    db.collection("public").doc(webtalk_room).get().then((doc)=>{
+      var message_length = doc.data().time.length;
+      var recent_id = "";
+      var recent_time = doc.data().time[0].substr(0,16);
+      var arr_ids = doc.data().ids;
+      var arr_imgs = doc.data().imgs;
+      var tmp_timestamp = `<div class="timestamp">${getDate(recent_time)}</div>`;
+      $("#list").append(tmp_timestamp);
 
+      for (var i=0; i<message_length; i++) {
+        tmp_id = doc.data().id[i];
+        tmp_text = doc.data().text[i];
+        tmp_time = doc.data().time[i].substr(0,16);
+        tmp_img = arr_imgs[arr_ids.indexOf(tmp_id)];
 
-        var message_length = doc.data().time.length;
-        var recent_id = "";
-        var recent_time = doc.data().time[0].substr(0,16);
-        var opp_img= doc.data().img1;
-        if (tmp1 == webtalk_id) { opp_img = doc.data().img2; }
-        var tmp_timestamp = `<div class="timestamp">${getDate(recent_time)}</div>`;
-        $("#list").append(tmp_timestamp);
+        if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
+          recent_time = tmp_time.substr(0,10) + " 99:99";
+          tmp_timestamp = `<div class="timestamp">${getDate(tmp_time)}</div>`;
+          $("#list").append(tmp_timestamp);
+        }
 
-
-        for (var i=0; i < message_length; i++) {
-
-          tmp_id = doc.data().id[i];
-          tmp_text = doc.data().text[i];
-          tmp_time = doc.data().time[i].substr(0,16);
-          
-          // timestamp
-          if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
-            recent_time = tmp_time.substr(0,10) + " 99:99";
-            tmp_timestamp = `
-            <div class="timestamp">${getDate(tmp_time)}</div>
-            `;
-            $("#list").append(tmp_timestamp);
+        if (tmp_id == webtalk_id) {
+          if (recent_id == tmp_id && recent_time == tmp_time) {
+            document.getElementById("mtime"+String(i-1)).innerHTML = "";
           }
-          
-          // my message
-          if (tmp_id == webtalk_id) {
-            
-            if (recent_id == tmp_id && recent_time == tmp_time) {
-              // delete before time
-              document.getElementById("mtime"+String(i-1)).innerHTML = "";
-            }
-            else {
-              // term
-              $("#list").append(`<div id="messagechanged"></div>`);
-            }
-            var tmp_mymessage = `
-            <div class="mymessage">
-              <div class="mymessage_info">
-                <span class="mymessage_bubble">${tmp_text}</span>
-                <span id="mtime${i}" class="mymessage_time">${tmp_time.substr(11,5)}</span>
+          else {
+            $("#list").append(`<div id="messagechanged"></div>`);
+          }
+          var tmp_mymessage = `
+          <div class="mymessage">
+            <div class="mymessage_info">
+              <span class="mymessage_bubble">${tmp_text}</span>
+              <span id="mtime${i}" class="mymessage_time">${tmp_time.substr(11,5)}</span>
+            </div>
+          </div>
+          `;
+          $("#list").append(tmp_mymessage);
+          recent_id = tmp_id;
+          recent_time = tmp_time;
+        }
+
+        else {
+          if (recent_id == tmp_id && recent_time == tmp_time) {
+            document.getElementById("mtime"+String(i-1)).innerHTML = ""
+            var tmp_oppmessage = `
+            <div class="message">
+              <div class="message_skip"></div>
+              <div class="message_context">
+                <div class="message_info">
+                  <span class="message_bubble">${tmp_text}</span>
+                  <span class="message_time">${tmp_time.substr(11,5)}</span>
+                </div>
               </div>
             </div>
             `;
-            $("#list").append(tmp_mymessage);
-            recent_id = tmp_id;
-            recent_time = tmp_time;
+            $("#list").append(tmp_oppmessage);
+          }
+          else {
+            $("#list").append(`<div id="messagechanged"></div>`);
+            var tmp_oppmessage = `
+            <div class="message">
+              <img src="${tmp_img}">
+              <div class="message_context">
+                <span class="message_sender">${tmp_id}</span>
+                <div class="message_info">
+                  <span class="message_bubble">${tmp_text}</span>
+                  <span id="mtime${i}" class="message_time">${tmp_time.substr(11,5)}</span>
+                </div>
+              </div>
+            </div>`;
+            $("#list").append(tmp_oppmessage);
+          }
+          recent_id = tmp_id;
+          recent_time = tmp_time;
+        }
+
+      }
+
+      updateScroll();
+
+      db.collection("login").doc(webtalk_id).get().then((doc)=>{
+        var arr_room = doc.data().room;
+        var arr_unread = doc.data().unread;
+        arr_unread[arr_room.indexOf(webtalk_room)] = 0;
+        db.collection("login").doc(webtalk_id).update({ unread: arr_unread });
+      });
+
+    });
+
+
+    // send server data, screen, give unread
+    $("#sendMessage").on("keyup",function(key){
+      if (key.keyCode == 13) {
+
+        var input_text = document.getElementById("sendMessage").value;
+        document.getElementById("sendMessage").value = "";
+
+        // update message
+        db.collection("public").doc(webtalk_room).get().then((doc)=>{
+
+          var arr_id = doc.data().id;
+          arr_id[arr_id.length] = webtalk_id;
+          var arr_text = doc.data().text;
+          arr_text[arr_text.length] = input_text;
+          var arr_time = doc.data().time;
+          arr_time[arr_time.length] = getTime();
+
+          db.collection("private").doc(webtalk_room).update({
+            id: arr_id,
+            text: arr_text,
+            time: arr_time
+          });
+
+          var tmp_mymessage = `
+          <div class="mymessage">
+            <div class="mymessage_info">
+              <span class="mymessage_bubble">${input_text}</span>
+              <span id="mtime${arr_time.length-1}" class="mymessage_time">${arr_time[arr_time.length-1].substr(11,5)}</span>
+            </div>
+          </div>`;
+          if (arr_id[arr_id.length-2] == arr_id[arr_id.length-1] 
+          && arr_time[arr_time.length-2].substr(0,16) == arr_time[arr_time.length-1].substr(0,16)) {
+            document.getElementById("mtime"+String(arr_id.length-2)).innerHTML = "";
+          }
+          else {
+            $("#list").append(`<div id="messagechanged"></div>`);
           }
 
-          // opp message
-          else {
+          $("#list").append(tmp_mymessage);
+          updateScroll();
 
+
+          //update unread
+          var arr_ids = doc.data().ids;
+          for (var i=0; i<arr_ids.length; i++) {
+            if (arr_ids[i] != webtalk_id) {
+              var dbRef = db.collection("login").doc(arr_ids[i]);
+              dbRef.get().then((doc)=>{
+                var arr_room = doc.data().room;
+                var arr_unread = doc.data().unread;
+                arr_unread[arr_room.indexOf(webtalk_room)] += 1;
+
+                var str_id = doc.data().id;
+                db.collection("login").doc(str_id).update({ unread: arr_unread });
+              });
+            }
+          }
+
+        });
+
+      }
+    });
+
+    
+    // unread live active, get message from db 
+    db.collection("login").doc(webtalk_id).onSnapshot((doc)=>{
+
+      var arr_room = doc.data().room;
+      var arr_unread = doc.data().unread;
+      var num_unread = arr_unread[arr_room.indexOf(webtalk_room)];
+      if (num_unread != 0) {
+
+        db.collection("public").doc(webtalk_room).get().then((doc)=>{
+
+          var message_length = doc.data().time.length;
+          var readed = message_length - num_unread;
+          var recent_id = doc.data().id[readed-1];
+          var recent_time = doc.data().time[readed-1].substr(0,16);
+          var arr_ids = doc.data().ids;
+          var arr_imgs= doc.data().imgs;
+
+          for (var i=readed; i < message_length; i++) {
+            // opp message load
+            tmp_id = doc.data().id[i];
+            tmp_text = doc.data().text[i];
+            tmp_time = doc.data().time[i].substr(0,16);
+            tmp_img = arr_imgs[arr_ids.indexOf(tmp_id)];
+            // timestamp
+            if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
+              recent_time = tmp_time.substr(0,10) + " 99:99";
+              tmp_timestamp = `<div class="timestamp">${getDate(tmp_time)}</div>`;
+              $("#list").append(tmp_timestamp);
+            }
+            // message part
             if (recent_id == tmp_id && recent_time == tmp_time) {
               document.getElementById("mtime"+String(i-1)).innerHTML = ""
               var tmp_oppmessage = `
@@ -304,7 +421,7 @@
               $("#list").append(`<div id="messagechanged"></div>`);
               var tmp_oppmessage = `
               <div class="message">
-                <img src="${opp_img}">
+                <img src="${tmp_img}">
                 <div class="message_context">
                   <span class="message_sender">${tmp_id}</span>
                   <div class="message_info">
@@ -317,165 +434,21 @@
             }
             recent_id = tmp_id;
             recent_time = tmp_time;
+            updateScroll()
           }
-        }
-
-        updateScroll()
+        });
 
         //update unread to zero
         db.collection("login").doc(webtalk_id).get().then((doc)=>{
           var arr_room = doc.data().room;
           var arr_unread = doc.data().unread;
-          arr_unread[arr_room.indexOf(room)] = 0;
+          arr_unread[arr_room.indexOf(webtalk_room)] = 0;
           db.collection("login").doc(webtalk_id).update({
             unread: arr_unread
           });
-        });
-
-      });
-
-      
-      // send server data, screen, give unread
-      $("#sendMessage").on("keyup",function(key){
-        if (key.keyCode == 13) {
-
-          var input_text = document.getElementById("sendMessage").value;
-          document.getElementById("sendMessage").value = "";
-
-          // update message
-          db.collection("private").doc(room).get().then((doc)=>{
-
-            var arr_id = doc.data().id;
-            arr_id[arr_id.length] = webtalk_id;
-            var arr_text = doc.data().text;
-            arr_text[arr_text.length] = input_text;
-            var arr_time = doc.data().time;
-            arr_time[arr_time.length] = getTime();
-
-            db.collection("private").doc(room).update({
-              id: arr_id,
-              text: arr_text,
-              time: arr_time
-            });
-
-            var tmp_mymessage = `
-            <div class="mymessage">
-              <div class="mymessage_info">
-                <span class="mymessage_bubble">${input_text}</span>
-                <span id="mtime${arr_time.length-1}" class="mymessage_time">${arr_time[arr_time.length-1].substr(11,5)}</span>
-              </div>
-            </div>`;
-            if (arr_id[arr_id.length-2] == arr_id[arr_id.length-1] 
-            && arr_time[arr_time.length-2].substr(0,16) == arr_time[arr_time.length-1].substr(0,16)) {
-              document.getElementById("mtime"+String(arr_id.length-2)).innerHTML = "";
-            }
-            else {
-              $("#list").append(`<div id="messagechanged"></div>`);
-            }
-
-            $("#list").append(tmp_mymessage);
-            updateScroll()
-
-          });
-
-          // update unread
-          db.collection("login").doc(webtalk_id2).get().then((doc)=>{
-
-            var arr_room = doc.data().room;
-            var arr_unread = doc.data().unread;
-            arr_unread[arr_room.indexOf(room)] += 1;
-
-            db.collection("login").doc(webtalk_id2).update({
-              unread: arr_unread
-            });
-          });
-
-        }
-      });
-
-      // unread live active, get message from db 
-      db.collection("login").doc(webtalk_id).onSnapshot((doc)=>{
-
-        var arr_room = doc.data().room;
-        var arr_unread = doc.data().unread;
-        var num_unread = arr_unread[arr_room.indexOf(room)];
-        if (num_unread != 0) {
-
-          db.collection("private").doc(room).get().then((doc)=>{
-
-            var message_length = doc.data().time.length;
-            var readed = message_length - num_unread;
-            var recent_id = doc.data().id[readed-1];
-            var recent_time = doc.data().time[readed-1].substr(0,16);
-            var opp_img= doc.data().img1;
-            if (tmp1 == webtalk_id) { opp_img = doc.data().img2; }
-
-            for (var i=readed; i < message_length; i++) {
-              // opp message load
-              tmp_id = doc.data().id[i];
-              tmp_text = doc.data().text[i];
-              tmp_time = doc.data().time[i].substr(0,16);
-              // timestamp
-              if (recent_time.substr(0,10) != tmp_time.substr(0,10)) {
-                recent_time = tmp_time.substr(0,10) + " 99:99";
-                tmp_timestamp = `<div class="timestamp">${getDate(tmp_time)}</div>`;
-                $("#list").append(tmp_timestamp);
-              }
-              // message part
-              if (recent_id == tmp_id && recent_time == tmp_time) {
-                document.getElementById("mtime"+String(i-1)).innerHTML = ""
-                var tmp_oppmessage = `
-                <div class="message">
-                  <div class="message_skip"></div>
-                  <div class="message_context">
-                    <div class="message_info">
-                      <span class="message_bubble">${tmp_text}</span>
-                      <span class="message_time">${tmp_time.substr(11,5)}</span>
-                    </div>
-                  </div>
-                </div>
-                `;
-                $("#list").append(tmp_oppmessage);
-              }
-              else {
-                $("#list").append(`<div id="messagechanged"></div>`);
-                var tmp_oppmessage = `
-                <div class="message">
-                  <img src="${opp_img}">
-                  <div class="message_context">
-                    <span class="message_sender">${tmp_id}</span>
-                    <div class="message_info">
-                      <span class="message_bubble">${tmp_text}</span>
-                      <span id="mtime${i}" class="message_time">${tmp_time.substr(11,5)}</span>
-                    </div>
-                  </div>
-                </div>`;
-                $("#list").append(tmp_oppmessage);
-              }
-              recent_id = tmp_id;
-              recent_time = tmp_time;
-              updateScroll()
-            }
-
-          });
-
-          //update unread to zero
-          db.collection("login").doc(webtalk_id).get().then((doc)=>{
-            var arr_room = doc.data().room;
-            var arr_unread = doc.data().unread;
-            arr_unread[arr_room.indexOf(room)] = 0;
-            db.collection("login").doc(webtalk_id).update({
-              unread: arr_unread
-            });
-          });
-          
-        }
-      });
-
-      // unread live
-
+        }); 
+      }
     });
-    // #####load chat data#####
 
 
     // date to day of the week (2022-03-26 16:30:00) => (2022-03-26 SAT)
