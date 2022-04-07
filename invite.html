@@ -234,7 +234,7 @@
               var str_img = doc.data().img;
               var str_id = doc.data().id;
               arr_unread[arr_unread.length] = 0;
-              arr_room[arr_room.length] = num_len;
+              arr_room[arr_room.length] = String(num_len);
               db.collection("login").doc(str_id).update({
                 room: arr_room,
                 unread: arr_unread

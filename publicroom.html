@@ -197,7 +197,7 @@
     // get info from localStorage
     var webtalk_id = localStorage.getItem("webtalk_id");
     var webtalk_room = localStorage.getItem("webtalk_publicroom");
-
+    //var webtalk_room = "-1";
 
     // #####load chat data#####
     db.collection("login").doc(webtalk_id).get().then((doc)=>{
@@ -325,7 +325,7 @@
           var arr_time = doc.data().time;
           arr_time[arr_time.length] = getTime();
 
-          db.collection("private").doc(webtalk_room).update({
+          db.collection("public").doc(webtalk_room).update({
             id: arr_id,
             text: arr_text,
             time: arr_time
@@ -355,12 +355,12 @@
           for (var i=0; i<arr_ids.length; i++) {
             if (arr_ids[i] != webtalk_id) {
               var dbRef = db.collection("login").doc(arr_ids[i]);
-              dbRef.get().then((doc)=>{
-                var arr_room = doc.data().room;
-                var arr_unread = doc.data().unread;
+              dbRef.get().then((doc2)=>{
+                var arr_room = doc2.data().room;
+                var arr_unread = doc2.data().unread;
                 arr_unread[arr_room.indexOf(webtalk_room)] += 1;
 
-                var str_id = doc.data().id;
+                var str_id = doc2.data().id;
                 db.collection("login").doc(str_id).update({ unread: arr_unread });
               });
             }
@@ -385,7 +385,8 @@
           var message_length = doc.data().time.length;
           var readed = message_length - num_unread;
           var recent_id = doc.data().id[readed-1];
-          var recent_time = doc.data().time[readed-1].substr(0,16);
+          var recent_time = doc.data().time[readed-1];
+          recent_time = String(recent_time).substr(0,16);
           var arr_ids = doc.data().ids;
           var arr_imgs= doc.data().imgs;
 
