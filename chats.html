@@ -121,6 +121,7 @@
 
   <div id="list">
 
+    <!--
     <div class="profile">
       <div class="prechatting">
         <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
@@ -136,6 +137,7 @@
         </div>
       </div>
     </div>
+  -->
 
   </div>
 
@@ -202,11 +204,14 @@
             else {
               tmp_time = tmp_time.substr(5,5);
             }
-            
-            if (arr_unread[j] == 0) {
-
+            var str_seed = doc.data().seed;
+            var tmp_unread = doc.data().unread;
+            if (webtalk_id == doc.data().id1) { tmp_unread = tmp_unread[0]; }
+            else { tmp_unread = tmp_unread[1]; }
+            if (tmp_unread == 0) {
+              
               var tmp_room = `
-              <div id="profile${j}" class="profile">
+              <div class="profile">
                 <div class="prechatting">
                   <img src="${tmp_img}">
                   <div>
@@ -214,15 +219,15 @@
                     <h4>${tmp_message}</h4>
                   </div>
                 </div>
-                <div id="timebadge${j}" class="timebadge">
-                  <span id="lasttime${j}">${tmp_time}</span>
+                <div id="timebadge${str_seed}" class="timebadge">
+                  <span id="lasttime${str_seed}">${tmp_time}</span>
                 </div>
               </div>`;
               $("#list").append(tmp_room);
             }
             else {
               var tmp_room = `
-              <div id="profile${j}" class="profile">
+              <div class="profile">
                 <div class="prechatting">
                   <img src="${tmp_img}">
                   <div>
@@ -230,9 +235,9 @@
                     <h4>${tmp_message}</h4>
                   </div>
                 </div>
-                <div id="timebadge${j}" class="timebadge">
-                  <span id="lasttime${j}">${tmp_time}</span>
-                  <div id="unreads${i}" class="badge">${arr_unread[i]}</div>
+                <div id="timebadge${str_seed}" class="timebadge">
+                  <span id="lasttime${str_seed}">${tmp_time}</span>
+                  <div id="unreads${str_seed}" class="badge"></div>
                 </div>
               </div>`;
               $("#list").prepend(tmp_room);
@@ -242,14 +247,94 @@
         }
         else {
           // public room
+          db.collection("public").doc(arr_room[j]).get().then((doc)=>{
+            var tmp_img = doc.data().logo;
+            var tmp_name = doc.data().name;
+            var tmp_message = doc.data().text;
+            tmp_message = tmp_message[tmp_message.length -1];
+            var tmp_time = doc.data().time;
+            tmp_time = tmp_time[tmp_time.length -1];
+            if (tmp_time.substr(0,10) == str_time.substr(0,10)) {
+              tmp_time = tmp_time.substr(11,5);
+            }
+            else {
+              tmp_time = tmp_time.substr(5,5);
+            }
+            var str_seed = doc.data().seed;
+            var arr_ids = doc.data().ids;
+            var tmp_unread = doc.data().unread;
+            tmp_unread = tmp_unread[arr_ids.indexOf(webtalk_id)];
+            if (tmp_unread == 0) {
+
+              var tmp_room = `
+              <div class="profile">
+                <div class="prechatting">
+                  <img src="${tmp_img}">
+                  <div>
+                    <h3>${tmp_name}</h3>
+                    <h4>${tmp_message}</h4>
+                  </div>
+                </div>
+                <div id="timebadge${str_seed}" class="timebadge">
+                  <span id="lasttime${str_seed}">${tmp_time}</span>
+                </div>
+              </div>`;
+              $("#list").append(tmp_room);
+            }
+            else {
+              var tmp_room = `
+              <div class="profile">
+                <div class="prechatting">
+                  <img src="${tmp_img}">
+                  <div>
+                    <h3>${tmp_name}</h3>
+                    <h4>${tmp_message}</h4>
+                  </div>
+                </div>
+                <div id="timebadge${str_seed}" class="timebadge">
+                  <span id="lasttime${str_seed}">${tmp_time}</span>
+                  <div id="unreads${str_seed}" class="badge"></div>
+                </div>
+              </div>`;
+              $("#list").prepend(tmp_room);
+            }
+
+          });
 
         }
+      
+      }
+      
+    });
+
+
+    // unread message
+    db.collection("login").doc(webtalk_id).get().then((doc)=>{
+      var arr_room = doc.data().room;
+      var arr_unread = doc.data().unread;
+
+      for (var i=0; i<arr_room.length; i++) {
+        if (arr_room[i] >= 0) {
+          db.collection("private").doc(arr_room[i]).get().then((doc)=>{
+            var tmp_e = document.getElementById("unreads"+doc.data().seed);
+            if (webtalk_id == doc.data().id1 && doc.data().unread[1] != 0) { tmp_e.innerHTML = doc.data().unread[1]; }
+            else if (webtalk_id == doc.data().id2 && doc.data().unread[0] != 0) { tmp_e.innerHTML = doc.data().unread[0]; }
+          });
+        }
+        else {
+          db.collection("public").doc(arr_room[i]).get().then((doc)=>{
+            var tmp_e = document.getElementById("unreads"+doc.data().seed);
+            var arr_ids = doc.data().ids;
+            var arr_unread = doc.data().unread;
+            if (arr_unread[arr_ids.indexOf(webtalk_id)] != 0) {
+              tmp_e.innerHTML = arr_unread[arr_ids.indexOf(webtalk_id)];
+            }
+            
+          });
+        }
         
-
-
       }
 
-      
     });
 
     

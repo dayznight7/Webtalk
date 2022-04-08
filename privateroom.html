@@ -224,6 +224,8 @@
           room = String(doc.data().length)
           // making 1:1 room
           db.collection("private").doc(room).set({
+            seed: room,
+            unread: [0, 0],
             id: [],
             text: [],
             time: [],
@@ -382,6 +384,12 @@
             unread: arr_unread
           });
         });
+        db.collection("public").doc(room).get().then((doc)=>{
+          var arr_unread = doc.data().unread;
+          if (webtalk_id == doc.data().id1) { unread[0] = 0; }
+          else { unread[1] = 0; }
+          db.collection("public").doc(room).update({ unread: arr_unread });
+        });
 
       });
 
@@ -439,6 +447,12 @@
             db.collection("login").doc(webtalk_id2).update({
               unread: arr_unread
             });
+          });
+          db.collection("public").doc(room).get().then((doc)=>{
+            var arr_unread = doc.data().unread;
+            if (webtalk_id == doc.data().id1) { unread[1] += 1; }
+            else { unread[0] += 1; }
+            db.collection("public").doc(room).update({ unread: arr_unread });
           });
 
         }
