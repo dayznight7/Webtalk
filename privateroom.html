@@ -528,7 +528,14 @@
 
           });
 
+
           //update unread to zero
+          db.collection("private").doc(room).get().then((doc)=>{
+            var arr_unread = doc.data().unread;
+            if (webtalk_id = doc.data().id1) { arr_unread[0] = 0; }
+            else { arr_unread[1] = 0; }
+            db.collection("private").doc(room).update({ unread: arr_unread });
+          });
           db.collection("login").doc(webtalk_id).get().then((doc)=>{
             var arr_room = doc.data().room;
             var arr_unread = doc.data().unread;

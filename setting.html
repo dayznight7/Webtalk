@@ -103,6 +103,22 @@
 #nav_setting {
   font-size: 20px;
 }
+#tomatomessage {
+  position: fixed;
+  bottom: 30px;
+  left: 38%;
+  display: block;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  background-color: tomato;
+  color: white;
+  font-weight: 600;
+  border-radius: 50%;
+  font-size: 12px;
+}
   </style>
 </head>
 <body>
@@ -160,6 +176,8 @@
     <div id="nav_setting" onclick="nav_setting()"><i class="fa-solid fa-circle-user"></i></div>
   </nav>
 
+  <div id="tomatomessage"></div>
+
   <!--icon-->
   <script src="https://kit.fontawesome.com/490800a206.js" crossorigin="anonymous"></script>
 
@@ -167,6 +185,9 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="js/firebase_config.js"></script>
+
+  <!--jQuery cdn https://releases.jquery.com/ --> 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   
   <script>
 
@@ -175,10 +196,51 @@
     const db = firebase.firestore();
 
 
+    // get info from localStorage
+    const webtalk_id = localStorage.getItem("webtalk_id");
+
+
     function nav_friends() { location.replace("friends.html"); }
     function nav_chats() { location.replace("chats.html"); }
     function nav_search() { location.replace("search.html"); }
     function nav_setting() { location.replace("setting.html"); }
+
+
+    function sum(arr) {
+      var res = 0;
+      for (var i = 0; i < arr.length; i++) {
+        res += arr[i];
+      }
+      return res;
+    }
+
+
+    //unread message count
+    function load_unread() {
+      db.collection("login").doc(webtalk_id).get().then((doc)=>{
+        var unread = sum(doc.data().unread);
+        document.getElementById("tomatomessage").innerHTML = unread;
+        if (unread == 0) {
+          $("#tomatomessage").hide();
+        }
+        else {
+          $("#tomatomessage").show();
+        }
+      });
+    }
+
+
+    // tomato message realtime
+    db.collection("login").doc(webtalk_id).onSnapshot((doc)=>{
+      var unread = sum(doc.data().unread);
+      document.getElementById("tomatomessage").innerHTML = unread;
+      if (unread == 0) {
+        $("#tomatomessage").hide();
+      }
+      else {
+        $("#tomatomessage").show();
+      }
+    });
 
     
   </script>

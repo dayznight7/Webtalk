@@ -301,6 +301,13 @@
 
       updateScroll();
 
+      //update unread to zero
+      db.collection("public").doc(webtalk_room).get().then((doc)=>{
+        var arr_ids = doc.data().ids;
+        var arr_unread = doc.data().unread;
+        arr_unread[arr_unread.indexOf(webtalk_id)] = 0;
+        db.collection("public").doc(room).update({ unread: arr_unread });
+      });
       db.collection("login").doc(webtalk_id).get().then((doc)=>{
         var arr_room = doc.data().room;
         var arr_unread = doc.data().unread;
