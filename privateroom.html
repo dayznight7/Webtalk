@@ -452,8 +452,8 @@
           });
           db.collection("public").doc(room).get().then((doc)=>{
             var arr_unread = doc.data().unread;
-            if (webtalk_id == doc.data().id1) { unread[1] += 1; }
-            else { unread[0] += 1; }
+            if (webtalk_id == doc.data().id1) { arr_unread[1] += 1; }
+            else { arr_unread[0] += 1; }
             db.collection("public").doc(room).update({ unread: arr_unread });
           });
 
