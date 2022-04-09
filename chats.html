@@ -207,11 +207,11 @@
             var tmp_img;
             var tmp_opp;
             var tmp_message = doc.data().text;
-            tmp_message = tmp_message[tmp_message.length -1];
-            if (tmp_message == undefined) { tmp_message = "Send First Message!"; }
+            tmp_message = String(tmp_message[tmp_message.length -1]);
+            if (tmp_message == "undefined") { tmp_message = "Send First Message!"; }
             var tmp_time = doc.data().time;
-            tmp_time = tmp_time[tmp_time.length -1];
-            if (tmp_time == undefined) { tmp_time == "-------:--" }
+            tmp_time = String(tmp_time[tmp_time.length -1]);
+            if (tmp_time == "undefined") { tmp_time = "-----Empty"; }
             if (doc.data().id1 == webtalk_id) { 
               tmp_img = doc.data().img2;
               tmp_opp = doc.data().id2;
@@ -272,11 +272,11 @@
             var tmp_img = doc.data().logo;
             var tmp_name = doc.data().name;
             var tmp_message = doc.data().text;
-            tmp_message = tmp_message[tmp_message.length -1];
-            if (tmp_message == undefined) { tmp_message = "Send First Message!"; }
+            tmp_message = String(tmp_message[tmp_message.length -1]);
+            if (tmp_message == "undefined") { tmp_message = "Send First Message!"; }
             var tmp_time = doc.data().time;
-            tmp_time = tmp_time[tmp_time.length -1];
-            if (tmp_time == undefined) { tmp_time == "-------:--" }
+            tmp_time = String(tmp_time[tmp_time.length -1]);
+            if (tmp_time == "undefined") { tmp_time = "-----Empty"; }
             if (tmp_time.substr(0,10) == str_time.substr(0,10)) {
               tmp_time = tmp_time.substr(11,5);
             }
