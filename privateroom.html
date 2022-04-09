@@ -36,6 +36,8 @@
   height: 50px;
   border-radius: 40%;
   margin-right: 10px;
+  transform: translate(-50%,0,50%);
+  object-fit: cover;
 }
 .message_skip {
   width: 50px;
@@ -384,11 +386,11 @@
             unread: arr_unread
           });
         });
-        db.collection("public").doc(room).get().then((doc)=>{
+        db.collection("private").doc(room).get().then((doc)=>{
           var arr_unread = doc.data().unread;
-          if (webtalk_id == doc.data().id1) { unread[0] = 0; }
-          else { unread[1] = 0; }
-          db.collection("public").doc(room).update({ unread: arr_unread });
+          if (webtalk_id == doc.data().id1) { arr_unread[0] = 0; }
+          else { arr_unread[1] = 0; }
+          db.collection("private").doc(room).update({ unread: arr_unread });
         });
 
       });

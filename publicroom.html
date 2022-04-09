@@ -36,6 +36,8 @@
   height: 50px;
   border-radius: 40%;
   margin-right: 10px;
+  transform: translate(-50%,0,50%);
+  object-fit: cover;
 }
 .message_skip {
   width: 50px;
@@ -197,6 +199,7 @@
     // get info from localStorage
     var webtalk_id = localStorage.getItem("webtalk_id");
     var webtalk_room = localStorage.getItem("webtalk_publicroom");
+    console.log(typeof(webtalk_room));
     //var webtalk_room = "-1";
 
     // #####load chat data#####

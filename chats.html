@@ -47,6 +47,8 @@
   height: 60px;
   border-radius: 40%;
   margin-right: 20px;
+  transform: translate(-50%,0,50%);
+  object-fit: cover;
 }
 .prechatting {
   display: flex;
@@ -209,9 +211,8 @@
             if (webtalk_id == doc.data().id1) { tmp_unread = tmp_unread[0]; }
             else { tmp_unread = tmp_unread[1]; }
             if (tmp_unread == 0) {
-              
               var tmp_room = `
-              <div class="profile">
+              <div class="profile" onclick="go_private('${tmp_opp}')">
                 <div class="prechatting">
                   <img src="${tmp_img}">
                   <div>
@@ -227,7 +228,7 @@
             }
             else {
               var tmp_room = `
-              <div class="profile">
+              <div class="profile" onclick="go_private('${tmp_opp}')">
                 <div class="prechatting">
                   <img src="${tmp_img}">
                   <div>
@@ -265,9 +266,8 @@
             var tmp_unread = doc.data().unread;
             tmp_unread = tmp_unread[arr_ids.indexOf(webtalk_id)];
             if (tmp_unread == 0) {
-
               var tmp_room = `
-              <div class="profile">
+              <div class="profile" onclick="go_public(${str_seed})">
                 <div class="prechatting">
                   <img src="${tmp_img}">
                   <div>
@@ -283,7 +283,7 @@
             }
             else {
               var tmp_room = `
-              <div class="profile">
+              <div class="profile" onclick="go_public(${str_seed})">
                 <div class="prechatting">
                   <img src="${tmp_img}">
                   <div>
@@ -316,9 +316,15 @@
       for (var i=0; i<arr_room.length; i++) {
         if (arr_room[i] >= 0) {
           db.collection("private").doc(arr_room[i]).get().then((doc)=>{
-            var tmp_e = document.getElementById("unreads"+doc.data().seed);
-            if (webtalk_id == doc.data().id1 && doc.data().unread[1] != 0) { tmp_e.innerHTML = doc.data().unread[1]; }
-            else if (webtalk_id == doc.data().id2 && doc.data().unread[0] != 0) { tmp_e.innerHTML = doc.data().unread[0]; }
+            
+            if (webtalk_id == doc.data().id1 && doc.data().unread[0] != 0) {
+              var tmp_e = document.getElementById("unreads"+doc.data().seed);
+              tmp_e.innerHTML = doc.data().unread[0];
+            }
+            else if (webtalk_id == doc.data().id2 && doc.data().unread[1] != 0) {
+              var tmp_e = document.getElementById("unreads"+doc.data().seed);
+              tmp_e.innerHTML = doc.data().unread[1];
+            }
           });
         }
         else {
@@ -335,8 +341,34 @@
         
       }
 
+
     });
 
+
+    //live unread
+    db.collection("login").doc(webtalk_id).get().then((doc)=>{
+      var arr_unread = doc.data().unread;
+      db.collection("login").doc(webtalk_id).onSnapshot((doc)=>{
+        db.collection("login").doc(webtalk_id).get().then((doc)=>{
+          if (!arrEqual(arr_unread,doc.data().unread)) {
+            location.reload();
+          }
+        }); 
+      });
+    });
+
+
+    // arr equal
+    function arrEqual(arr1, arr2) {
+      if (!Array.isArray(arr1) || ! Array.isArray(arr2) || arr1.length !== arr2.length) {
+        return false;
+      }
+      for (var i=0; i<arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) { return false; }
+      }
+      return true;
+    }
+    
     
     // get time str format "YYYY-MM-DD HH:MM" 
     function getTime() {
@@ -346,6 +378,18 @@
 
     function make_chat() {
       location.replace("invite.html");
+    }
+
+
+    function go_private(opp_id) {
+      localStorage.setItem("webtalk_privateroom",opp_id);
+      window.open("privateroom.html", "_blank");
+    }
+
+
+    function go_public(str_room) {
+      localStorage.setItem("webtalk_publicroom",str_room);
+      window.open("publicroom.html", "_blank");
     }
 
 
