@@ -218,7 +218,6 @@
       var input_index = document.getElementById("info").value;
       db.collection("login").where(str,"==",input_index).limit(1).get().then((qs)=>{
         if (qs.size == 1) {
-          console.log(qs.docs[0].data())
           var e1 = document.getElementById("add_img");
           var e2 = document.getElementById("add_id");
           var e3 = document.getElementById("add_btn");
@@ -239,7 +238,7 @@
     function addbtn(str) {
       db.collection("login").doc(webtalk_id).get().then((doc)=>{
         var arr_friend = doc.data().friend;
-        if (doc.data().id == webtalk_id) {
+        if (str == webtalk_id) {
           swal({
           title: "Failed",
           text: "Unable to add yourself as a friend",
@@ -252,14 +251,14 @@
           db.collection("login").doc(webtalk_id).update({ friend: arr_friend });
           swal({
           title: "Success!",
-          text: str + " added successfully!",
+          text: "Added successfully!",
           icon: "success",
           });
         }
         else {
           swal({
           title: "Failed",
-          text: str + " already added as a friend",
+          text: "Already Added as a friend",
           icon: "error",
           });
         }
