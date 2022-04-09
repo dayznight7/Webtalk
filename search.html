@@ -99,6 +99,37 @@
   border-radius: 50%;
   font-size: 12px;
 }
+#add {
+  margin-left: 60px;
+  margin-right: 60px;
+  padding-top: 20%;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#add_info {
+  display: flex;
+}
+#add_img {
+  width: 60px;
+  height: 60px;
+  border-radius: 40%;
+  margin-right: 20px;
+  transform: translate(-50%,0,50%);
+  object-fit: cover;
+}
+#add_id {
+  padding-top: 12px;
+}
+#add_end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+#add_btn {
+  font-size: 36px;
+}
   </style>
 </head>
 <body>
@@ -114,23 +145,37 @@
 
   <div id="list">
 
-    <form id="find">
-      <div><input class="type" type="text" placeholder="ID / Telephone / Email"></div>
+    <form id="find" onsubmit="return false;">
+      <div><input id="info" class="type" type="text" placeholder="ID / Telephone / Email"></div>
     </form>
     
     <div id="etr">
-      <div>
+      <div onclick="addBy('id')">
         <i class="fa-solid fa-id-badge"></i>
         <div>Add by ID</div>
       </div>
-      <div>
+      <div onclick="addBy('tel')">
         <i class="fa-solid fa-phone"></i>
         <div>Add by Tel</div>
       </div>
-      <div>
+      <div onclick="addBy('email')">
         <i class="fa-solid fa-envelope"></i>
         <div>Add by Email</div>
       </div>
+    </div>
+
+    <div id="add">
+      <div id="add_info">
+        <img id="add_img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAADKCAMAAAC7SK2iAAAAA1BMVEX///+nxBvIAAAASElEQVR4nO3BMQEAAADCoPVPbQ0PoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeDMYOAAEnHI17AAAAAElFTkSuQmCC">
+        <h2 id="add_id"></h2>
+      </div>
+      <div id="add_end">
+        <i id="add_btn" class="" onclick="addbtn()"></i>
+      </div>
+      <!--
+      fa-solid fa-square-check
+      fa-solid fa-square-plus
+      -->
     </div>
     
   </div>
@@ -155,6 +200,8 @@
   <!--jQuery cdn https://releases.jquery.com/ --> 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+  <!--sweetalert cdn https://sweetalert.js.org/guides/-->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   
   <script>
 
@@ -167,14 +214,60 @@
     const webtalk_id = localStorage.getItem("webtalk_id");
 
 
-    function addByID() {
-
+    function addBy(str) {
+      var input_index = document.getElementById("info").value;
+      db.collection("login").where(str,"==",input_index).limit(1).get().then((qs)=>{
+        if (qs.size == 1) {
+          console.log(qs.docs[0].data())
+          var e1 = document.getElementById("add_img");
+          var e2 = document.getElementById("add_id");
+          var e3 = document.getElementById("add_btn");
+          e1.src = qs.docs[0].data().img;
+          e2.innerHTML = qs.docs[0].data().id;
+          e3.className = "fa-solid fa-square-plus";
+          e3.setAttribute("onclick", "addbtn('" + qs.docs[0].data().id + "')");
+        }
+        else {
+          swal({
+          title: "Failed",
+          text: "No account found",
+          icon: "error",
+          });
+        }
+      });
     }
-    function addByTel() {
+    function addbtn(str) {
+      db.collection("login").doc(webtalk_id).get().then((doc)=>{
+        var arr_friend = doc.data().friend;
+        if (doc.data().id == webtalk_id) {
+          swal({
+          title: "Failed",
+          text: "Unable to add yourself as a friend",
+          icon: "error",
+          });
+        }
+        else if (arr_friend.indexOf(str) == -1) {
+          arr_friend[arr_friend.length] = str;
+          arr_friend.sort();
+          db.collection("login").doc(webtalk_id).update({ friend: arr_friend });
+          swal({
+          title: "Success!",
+          text: str + " added successfully!",
+          icon: "success",
+          });
+        }
+        else {
+          swal({
+          title: "Failed",
+          text: str + " already added as a friend",
+          icon: "error",
+          });
+        }
 
-    }
-    function addbyEmail() {
-      
+      });
+      var e = document.getElementById("add_btn");
+      e.className = "fa-solid fa-square-check";
+      e.setAttribute("onclick", "");
     }
 
 
