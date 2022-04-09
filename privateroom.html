@@ -445,7 +445,7 @@
             var arr_unread = doc.data().unread;
             if (webtalk_id == doc.data().id1) { arr_unread[1] += 1; }
             else { arr_unread[0] += 1; }
-            db.collection("public").doc(room).update({ unread: arr_unread });
+            db.collection("private").doc(room).update({ unread: arr_unread });
           });
           db.collection("login").doc(webtalk_id2).get().then((doc)=>{
 
