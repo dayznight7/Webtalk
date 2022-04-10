@@ -39,6 +39,8 @@
   width: 80px;
   height: 80px;
   border-radius: 40%;
+  transform: translate(-50%,0,50%);
+  object-fit: cover;
   margin-right: 20px;
 }
 #myprofile div h4 {
@@ -56,22 +58,6 @@
   margin-bottom: 15px;
   margin-left: 20px;
   margin-right: 40px;
-}
-#profile {
-  margin-left: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-#profile img {
-  width: 60px;
-  height: 60px;
-  border-radius: 40%;
-  margin-right: 20px;
-}
-#profile h6 {
-  color: rgba(0,0,0,0.5);
 }
 #nav {
   box-sizing: border-box;
@@ -119,6 +105,34 @@
   border-radius: 50%;
   font-size: 12px;
 }
+#login {
+  padding-top: 30px;
+  padding-left: 60px;
+  padding-right: 80px;
+  padding-bottom: 20px;
+}
+#login div {
+  text-align: center;
+}
+#login div .notice {
+  width: 100%;
+  margin: auto;
+  text-align: left;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+#login div .type {
+  width: 100%;
+  margin-bottom: 16px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  font-size: 16px;
+}
+#login i {
+  font-size: 24px;
+  float: left;
+}
   </style>
 </head>
 <body>
@@ -143,27 +157,33 @@
 
     <div id="line"></div>
 
-    <div id="profile">
-      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
+    <div id="login">
       <div>
-        <h4>Github</h>
-        <h6>Github.com</h>
+        <p class="notice">Profile Img</p>
+        <div>
+          <input class="type" type="password" placeholder="">
+        </div>
+        <i class="fa-solid fa-circle-arrow-up"></i>
+        <i class="fa-solid fa-circle-up"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
+        <i class="fa-solid fa-circle-check"></i>
+        
       </div>
-    </div>
-
-    <div id="profile">
-      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
       <div>
-        <h4>Github</h>
-        <h6>Github.com</h>
+        <p class="notice">Nickname</p>
+        <input class="type" type="text" placeholder="">
       </div>
-    </div>
-
-    <div id="profile">
-      <img src="https://cdn-icons-png.flaticon.com/512/38/38401.png">
       <div>
-        <h4>Github</h>
-        <h6>Github.com</h>
+        <p class="notice">Password</p>
+        <input class="type" type="password" placeholder="">
+      </div>
+      <div>
+        <p class="notice">Phone number</p>
+        <input class="type" type="tel" maxlength="11" placeholder="">
+      </div>
+      <div>
+        <p class="notice">Email</p>
+        <input class="type" type="email" placeholder="">
       </div>
     </div>
 
