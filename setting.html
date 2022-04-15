@@ -285,17 +285,15 @@
           title: "Update",
           text: "Do you want to update profile?",
           icon: "warning",
-          buttons: {
-            cancel: {
-              text: "cancel",
-              value: false,
-            },
-            confirm: {
-              text: "update",
-              value: true,
-            },
-          },
+          buttons: ["Cancel","Update"],
           closeOnClickOutside : false
+          }).then((res)=>{
+            if (res) {
+              console.log(res);
+            }
+            else {
+              console.log(res);
+            }
           });
       //db.collection("login").doc(webtalk_id).update({ img: e });
     }
