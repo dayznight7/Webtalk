@@ -289,29 +289,172 @@
           closeOnClickOutside : false
           }).then((res)=>{
             if (res) {
-              console.log(res);
+              if (e != "") {
+                db.collection("login").doc(webtalk_id).update({ img: e });
+                swal({
+                  title: "Success!",
+                  text: "",
+                  icon: "success",
+                });
+              }
+              else {
+                swal({
+                  title: "Failed",
+                  text: "Please check if you write correct information",
+                  icon: "error",
+                });
+              }
+    
             }
             else {
-              console.log(res);
             }
           });
-      //db.collection("login").doc(webtalk_id).update({ img: e });
     }
     function update_nickname() {
       var e = document.getElementById("input_nn").value;
-      //db.collection("login").doc(webtalk_id).update({ nickname: e });
+      swal({
+          title: "Update",
+          text: "Do you want to update profile?",
+          icon: "warning",
+          buttons: ["Cancel","Update"],
+          closeOnClickOutside : false
+          }).then((res)=>{
+            if (res) {
+              if (e != "") {
+                db.collection("login").doc(webtalk_id).update({ nickname: e });
+                swal({
+                  title: "Success!",
+                  text: "",
+                  icon: "success",
+                });
+              }
+              else {
+                swal({
+                  title: "Failed",
+                  text: "Please check if you write correct information",
+                  icon: "error",
+                });
+              }
+    
+            }
+            else {
+            }
+          });
     }
     function update_pw() {
       var e = document.getElementById("input_pw").value;
-      //db.collection("login").doc(webtalk_id).update({ pw: e });
+      swal({
+          title: "Update",
+          text: "Do you want to update profile?",
+          icon: "warning",
+          buttons: ["Cancel","Update"],
+          closeOnClickOutside : false
+          }).then((res)=>{
+            if (res) {
+              if (e != "") {
+                db.collection("login").doc(webtalk_id).update({ pw: e });
+                swal({
+                  title: "Success!",
+                  text: "",
+                  icon: "success",
+                });
+              }
+              else {
+                swal({
+                  title: "Failed",
+                  text: "Please check if you write correct information",
+                  icon: "error",
+                });
+              }
+    
+            }
+            else {
+            }
+          });
     }
     function update_tel() {
       var e = document.getElementById("input_tel").value;
-      //db.collection("login").doc(webtalk_id).update({ tel: e });
+      swal({
+          title: "Update",
+          text: "Do you want to update profile?",
+          icon: "warning",
+          buttons: ["Cancel","Update"],
+          closeOnClickOutside : false
+          }).then((res)=>{
+            if (res) {
+              if (e != "") {
+                db.collection("login").where("tel","==",e).get().then((qss)=>{
+                  if (qss.length == 0) {
+                    db.collection("login").doc(webtalk_id).update({ tel: e });
+                    swal({
+                      title: "Success!",
+                      text: "",
+                      icon: "success",
+                    });
+                  }
+                  else {
+                    swal({
+                      title: "Failed",
+                      text: "Already exists!",
+                      icon: "error",
+                    });
+                  }
+                });
+              }
+              else {
+                swal({
+                  title: "Failed",
+                  text: "Please check if you write correct information",
+                  icon: "error",
+                });
+              }
+    
+            }
+            else {
+            }
+          });
     }
     function update_email() {
       var e = document.getElementById("input_email").value;
-      //db.collection("login").doc(webtalk_id).update({ email: e });
+      swal({
+          title: "Update",
+          text: "Do you want to update profile?",
+          icon: "warning",
+          buttons: ["Cancel","Update"],
+          closeOnClickOutside : false
+          }).then((res)=>{
+            if (res) {
+              if (e != "") {
+                db.collection("login").where("tel","==",e).get().then((qss)=>{
+                  if (qss.length == 0) {
+                    db.collection("login").doc(webtalk_id).update({ email: e });
+                    swal({
+                      title: "Success!",
+                      text: "",
+                      icon: "success",
+                    });
+                  }
+                  else {
+                    swal({
+                      title: "Failed",
+                      text: "Already exists!",
+                      icon: "error",
+                    });
+                  }
+                });
+              }
+              else {
+                swal({
+                  title: "Failed",
+                  text: "Please check if you write correct information",
+                  icon: "error",
+                });
+              }
+    
+            }
+            else {
+            }
+          });
     }
 
     
