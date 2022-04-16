@@ -155,7 +155,7 @@
     <div>
       <i id="back" class="fa-solid fa-arrow-left"></i>
     </div>
-    <div><h2>dayznight7</h2></div>
+    <div><h2 id="whom"></h2></div>
     <div>
       <i id="right" class="fa-solid fa-bars"></i>
     </div>
@@ -199,8 +199,10 @@
     // get info from localStorage
     var webtalk_id = localStorage.getItem("webtalk_id");
     var webtalk_room = localStorage.getItem("webtalk_publicroom");
-    console.log(typeof(webtalk_room));
-    //var webtalk_room = "-1";
+    db.collection("public").doc(webtalk_room).get().then((doc)=>{
+      document.getElementById("whom").innerHTML = doc.data().name;
+    });
+
 
     // #####load chat data#####
     db.collection("login").doc(webtalk_id).get().then((doc)=>{

@@ -152,10 +152,10 @@
 
   <div id="list">
     <div id="myprofile">
-      <img src="https://file.mk.co.kr/meet/neds/2021/04/image_readtop_2021_330747_16177500644599916.jpg">
+      <img id="prof_img" src="https://i.stack.imgur.com/kOnzy.gif">
       <div>
-        <h4>Dayznight7</h4>
-        <h6>thinking</h6>
+        <h4 id="prof_id"></h4>
+        <h6 id="prof_intro"></h6>
       </div>
     </div>
 
@@ -175,6 +175,13 @@
         <div>
           <input id="input_nn" class="type" type="text" placeholder="">
           <i onclick="update_nickname()" class="fa-solid fa-circle-up"></i>
+        </div>
+      </div>
+      <div>
+        <p class="notice">Intro</p>
+        <div>
+          <input id="input_intro" class="type" type="text" placeholder="">
+          <i onclick="update_intro()" class="fa-solid fa-circle-up"></i>
         </div>
       </div>
       <div>
@@ -234,6 +241,13 @@
 
     // get info from localStorage
     const webtalk_id = localStorage.getItem("webtalk_id");
+
+
+    db.collection("login").doc(webtalk_id).get().then((doc)=>{
+      document.getElementById("prof_img").src = doc.data().img;
+      document.getElementById("prof_id").innerHTML = doc.data().id;
+      document.getElementById("prof_intro").innerHTML = doc.data().intro;
+    });
 
 
     function nav_friends() { location.replace("friends.html"); }
@@ -322,6 +336,37 @@
             if (res) {
               if (e != "") {
                 db.collection("login").doc(webtalk_id).update({ nickname: e });
+                swal({
+                  title: "Success!",
+                  text: "",
+                  icon: "success",
+                });
+              }
+              else {
+                swal({
+                  title: "Failed",
+                  text: "Please check if you write correct information",
+                  icon: "error",
+                });
+              }
+    
+            }
+            else {
+            }
+          });
+    }
+    function update_intro() {
+      var e = document.getElementById("input_intro").value;
+      swal({
+          title: "Update",
+          text: "Do you want to update profile?",
+          icon: "warning",
+          buttons: ["Cancel","Update"],
+          closeOnClickOutside : false
+          }).then((res)=>{
+            if (res) {
+              if (e != "") {
+                db.collection("login").doc(webtalk_id).update({ intro: e });
                 swal({
                   title: "Success!",
                   text: "",

@@ -155,7 +155,7 @@
     <div>
       <i id="back" class="fa-solid fa-arrow-left"></i>
     </div>
-    <div><h2>dayznight7</h2></div>
+    <div><h2 id="whom"></h2></div>
     <div>
       <i id="right" class="fa-solid fa-bars"></i>
     </div>
@@ -199,6 +199,7 @@
     // get info from localStorage
     var webtalk_id = localStorage.getItem("webtalk_id");
     var webtalk_id2 = localStorage.getItem("webtalk_privateroom");
+    document.getElementById("whom").innerHTML = webtalk_id2;
 
 
     // check who is first id1 vs id2
@@ -283,7 +284,7 @@
           img2: doc.data().img
         });
       });
-      
+
 
       // start
       db.collection("private").doc(room).get().then((doc)=>{
